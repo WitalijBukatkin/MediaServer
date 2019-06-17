@@ -1,0 +1,15 @@
+.buttonBarMain {
+    -fx-background-color: white;
+}
+
+.copyMoveBarButton{
+    -fx-background-color: rgba(128, 67, 80, 0.31);
+}
+
+.layout_main {
+    -fx-background-color: white;
+}
+
+.tree_main {
+    -fx-background-color: rgb(245, 245, 245);
+}

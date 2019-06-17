@@ -1,0 +1,12 @@
+.description{
+    -fx-font-weight: bold
+}
+
+.button{
+    -fx-background-color: rgba(128,126,104,0.44);
+    -fx-pref-width: 100;
+}
+
+.button:hover{
+    -fx-background-color: rgba(128, 126, 104, 0.24);
+}

@@ -1,0 +1,14 @@
+task deploy(dependsOn: processResources) {
+    doFirst{
+        ssh.run {
+            session(remotes.server) {
+                put from: file('build/resources/main/user-conf'), into: '/usr/local/sbin/'
+                
+                execute 'chmod a+x /usr/local/sbin/user-conf'
+            }
+        }
+    }
+}
+
+group 'mediaserver.system.hardware.util'
+version '1.0-SNAPSHOT'

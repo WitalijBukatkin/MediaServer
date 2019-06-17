@@ -1,0 +1,51 @@
+plugins {
+	id 'org.springframework.boot' version '2.1.5.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'org.hidetake.ssh'
+
+remotes {
+	server {
+		host = '192.168.1.33'
+		user = 'root'
+		agent = true
+		identity = file('${System.properties["HOME"]}/.ssh/id_rs')
+	}
+}
+
+task deploy(dependsOn: assemble) {
+	doFirst{
+		ssh.run {
+			session(remotes.server) {
+				execute 'mkdir /usr/local/microservices/config-service', ignoreError: true
+				put from: file('build/libs/config-service.jar'), into: '/usr/local/microservices/config-service/'
+				put from: file('Dockerfile'), into: '/usr/local/microservices/config-service/'
+			}
+		}
+	}
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "Greenwich.SR1")
+}
+
+group = 'ru.mediaserver.service'
+sourceCompatibility = '10'
+
+dependencies {
+	implementation 'org.springframework.cloud:spring-cloud-config-server'
+	implementation 'org.springframework.cloud:spring-cloud-starter-security'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}

@@ -1,0 +1,2 @@
+file-service:
+  rootFilePath: ${TEST_ROOT_FILE_PATH}

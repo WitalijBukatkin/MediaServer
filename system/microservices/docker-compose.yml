@@ -1,0 +1,33 @@
+version: '2.1'
+services:
+  config-service:
+    hostname: config
+    environment:
+      CONFIG_SERVICE_PASSWORD: rock64
+    build: config-service
+    restart: always
+    ports:
+      - 8888:8888
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  file-service:
+    environment:
+      CONFIG_SERVICE_PASSWORD: rock64
+      CONFIG_SERVICE_URI: "http://config"
+      ROOT_FILE_PATH: /mediaserver/
+    build: file-service
+    volumes:
+      - /Users/vitalijbukatkin:/mediaserver
+      - /Users/vitalijbukatkin/IdeaProjects/file-service/testdirectory:/Users/vitalijbukatkin/IdeaProjects/file-service/testdirectory
+    restart: always
+    ports:
+      - 8100:8100
+    depends_on:
+      - config-service
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"

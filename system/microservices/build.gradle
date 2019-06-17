@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'org.hidetake.ssh' version '2.9.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+allprojects{
+    apply plugin: 'java'
+    apply plugin: 'org.hidetake.ssh'
+
+    remotes {
+        server {
+            host = '192.168.1.33'
+            user = 'root'
+            agent = true
+            identity = file('${System.properties["HOME"]}/.ssh/id_rs')
+        }
+    }
+}
+
+group = 'ru.mediaserver.system'
+version = '0.0.1-SNAPSHOT'

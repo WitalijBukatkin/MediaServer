@@ -1,0 +1,6 @@
+include 'clients:msfxclient',
+        'system:microservices:config-service',
+        'system:microservices:auth-service',
+        'system:microservices:file-service',
+        'system:hardware:service:fan-control',
+        'system:hardware:util'

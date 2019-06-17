@@ -1,0 +1,47 @@
+#!/bin/sh
+log=/dev/null
+
+help(){
+    echo "Usage:\tuser-conf [argument] [...]
+    Supported arguments:
+        create name password  - create new user
+        remove name - delete existing user
+        help - this help"
+}
+
+create() {
+	name=$1
+	password=$2
+
+	if [ -z "$name" ] || [ -z password ]; then
+		help
+		exit
+	fi
+
+    useradd -g users -p "$password" -d "/sharedfolders/root/$name" -m "$name"
+
+    yes "$password" | smbpasswd -a "$name" >> log
+}
+
+remove(){
+	name=$1
+	
+	if [ -z "$name" ]; then
+		help
+		exit
+	fi
+
+    userdel "$name" >> log
+
+    rm -r "/sharedfolders/root/$name"
+}
+
+case "$1" in
+    create)
+			create $2 $3;;
+	remove)
+			remove $2;;
+	*)
+            help
+            exit;;
+esac

@@ -1,0 +1,18 @@
+server:
+  port: 8100
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+
+spring:
+  application:
+    name: file-service
+
+  cloud:
+    config:
+      uri: ${CONFIG_SERVICE_URI}:8888
+      password: ${CONFIG_SERVICE_PASSWORD}
+      username: user

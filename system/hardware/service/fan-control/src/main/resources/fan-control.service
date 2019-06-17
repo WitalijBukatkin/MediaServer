@@ -1,0 +1,6 @@
+[Unit]
+Description=fan-control service
+[Service]
+ExecStart=/usr/local/sbin/fan-control
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#
+# Media Server
+# VitalijBukatkin
+# 2018-2019
+#
+
+#load configuration
+. /usr/local/etc/fan-control.conf
+
+fan=/sys/class/hwmon/hwmon0/pwm1
+thermal=/sys/devices/virtual/thermal/thermal_zone0/temp
+
+prevPower=0
+while true; do
+    temperature=$(($(cat ${thermal})/1000))
+    power=$((temperature * 3 - (50 - intensity)))
+
+    if [ ${power} -gt 255 ]; then
+        power=255
+    elif [ ${power} -lt 45 ]; then
+        power=45
+    elif ${isEditableIntensity} && [ ${power} -gt $((255 + (intensity - 50))) ]; then
+        intensity=$((intensity+1)) # if temperature is high
+        continue
+    fi
+
+    if [ $power -ne $prevPower ]; then
+        echo ${power} > ${fan};
+        prevPower=${power}
+        echo "$(date) T = ${temperature}C, P=${power}/255"
+    fi
+
+    sleep 10
+done

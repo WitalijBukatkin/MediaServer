@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+      hibernate.format_sql: true
+      hibernate.hbm2ddl.auto: create
+    show-sql: true
+  datasource:
+    platform: postgres
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/auth-service
+    username: vitalijbukatkin
+    password: password

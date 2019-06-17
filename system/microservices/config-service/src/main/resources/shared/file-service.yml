@@ -1,0 +1,8 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20000MB
+      max-request-size: 20000MB
+
+file-service:
+  rootFilePath: ${ROOT_FILE_PATH}

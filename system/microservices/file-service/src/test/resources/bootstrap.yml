@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: file-service
+
+  cloud:
+    config:
+      uri: http://localhost:8888
+      password: ${CONFIG_SERVICE_PASSWORD}
+      username: user
+  profiles:
+      active: dev
+
+file-service:
+  rootFilePath: /Users/vitalijbukatkin/IdeaProjects/file-service/testdirectory/
