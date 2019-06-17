@@ -8,7 +8,6 @@ import ru.mediaserver.client.msfxclient.business.files.repository.FileRepository
 import ru.mediaserver.client.msfxclient.business.files.repository.InMemoryFileRepositoryImpl;
 import ru.mediaserver.client.msfxclient.business.files.service.task.DownloadTask;
 import ru.mediaserver.client.msfxclient.business.files.service.task.UploadTask;
-import ru.mediaserver.client.msfxclient.business.files.util.SecurityUtil;
 
 import java.io.File;
 import java.util.List;
@@ -39,8 +38,7 @@ public class FileService {
     
     private String encodePath(String path){
         if(repository instanceof InMemoryFileRepositoryImpl){
-            return path == null ||
-                    path.equals("") ? Base64Encoder.encode(SecurityUtil.getUserName()) : path;
+            return path == null || path.equals("") ? "" : path;
         }
         return Base64Encoder.encode(path);
     }
