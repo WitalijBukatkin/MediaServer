@@ -26,11 +26,15 @@ public class UploadTask extends Service<Void> {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                eventBarProperty.set(input.getName() + " started upload");
-                if(!repository.upload(path, input.getName(), new FileInputStream(input))) {
-                    throw new IOException();
+                try {
+                    eventBarProperty.set(input.getName() + " started upload");
+                    if (!repository.upload(path, input.getName(), new FileInputStream(input))) {
+                        throw new IOException();
+                    }
+                    eventBarProperty.set(input.getName() + " is uploaded");
+                } catch (Throwable e){
+                    e.printStackTrace();
                 }
-                eventBarProperty.set(input.getName() + " is uploaded");
                 return null;
             }
         };

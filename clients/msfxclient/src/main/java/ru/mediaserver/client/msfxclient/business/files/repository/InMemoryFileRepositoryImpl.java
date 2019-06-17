@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class InMemoryFileRepositoryImpl implements FileRepository {
     private Map<String, List<FileProperty>> files = new ConcurrentHashMap<>();
-    private Map<String, InputStream> values = new ConcurrentHashMap<>();
+    private Map<String, byte[]> values = new ConcurrentHashMap<>();
 
     {
         files.put(FileTestData.ROOT.getPath(),
@@ -28,10 +28,10 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
         files.put(FileTestData.FOLDER1.getPath(),
                 new CopyOnWriteArrayList<>(List.of(FileTestData.FILE3, FileTestData.FILE4)));
 
-        values.put(FileTestData.FILE2.getPath(), new ByteArrayInputStream(FileTestData.fileString.getBytes()));
-        values.put(FileTestData.FILE1.getPath(), new ByteArrayInputStream(FileTestData.fileString.getBytes()));
-        values.put(FileTestData.FILE3.getPath(), new ByteArrayInputStream(FileTestData.fileString.getBytes()));
-        values.put(FileTestData.FILE4.getPath(), new ByteArrayInputStream(FileTestData.fileString.getBytes()));
+        values.put(FileTestData.FILE2.getPath(), FileTestData.fileString.getBytes());
+        values.put(FileTestData.FILE1.getPath(), FileTestData.fileString.getBytes());
+        values.put(FileTestData.FILE3.getPath(), FileTestData.fileString.getBytes());
+        values.put(FileTestData.FILE4.getPath(), FileTestData.fileString.getBytes());
     }
 
     @Override
@@ -97,12 +97,12 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
 
         properties.add(property);
 
-        values.put(path, inputStream);
+        values.put(path, inputStream.readAllBytes());
         return true;
     }
 
     @Override
-    public InputStream download(String user, String path) throws IOException {
+    public InputStream download(String user, String path) {
         if(files.containsKey(path)){
             return null;
         }
@@ -120,11 +120,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
                     .findFirst();
 
             if(fileProperty.isPresent()){
-                var property = fileProperty.get();
-
-                var inputStream = values.get(path);
-
-                return inputStream;
+                return new ByteArrayInputStream(values.get(path));
             }
 
             return null;
@@ -165,8 +161,8 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
             return true;
         }
         if (values.containsKey(pathOf)) {
-            var inputStream = values.get(pathOf);
-            values.put(pathTo, inputStream);
+            byte[] bytes = values.get(pathOf);
+            values.put(pathTo, bytes);
             return true;
         }
         return false;
@@ -208,9 +204,9 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
             return true;
         }
         if (values.containsKey(pathOf)) {
-            InputStream inputStream = values.get(pathOf);
+            byte[] bytes = values.get(pathOf);
             values.remove(pathOf);
-            values.put(pathTo, inputStream);
+            values.put(pathTo, bytes);
             return true;
         }
         return false;

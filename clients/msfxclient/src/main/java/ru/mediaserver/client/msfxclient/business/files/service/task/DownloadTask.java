@@ -28,9 +28,9 @@ public class DownloadTask extends Service<Void> {
         return new Task<>() {
             @Override
             protected Void call() throws Exception {
-                try (BufferedInputStream inputStream = new BufferedInputStream(repository.download(user, path));
-                     FileOutputStream fileOutputStream = new FileOutputStream(output)) {
-
+                BufferedInputStream inputStream = new BufferedInputStream(repository.download(user, path));
+                FileOutputStream fileOutputStream = new FileOutputStream(output);
+                try{
                     byte[] dataBuffer = new byte[1024];
                     int downloaded = 0;
                     int bytesRead;
@@ -43,6 +43,8 @@ public class DownloadTask extends Service<Void> {
                     }
 
                     eventBarProperty.set(path + " is downloaded");
+                } catch (Throwable e){
+                    e.printStackTrace();
                 }
                 return null;
             }

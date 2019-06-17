@@ -9,6 +9,6 @@ public class FileUtil {
 
     public static String getPathWithOutName(String path){
         return path.contains("/") ?
-                path.substring(0, path.lastIndexOf("/")) : path;
+                path.substring(0, path.lastIndexOf("/")) : "";
     }
 }

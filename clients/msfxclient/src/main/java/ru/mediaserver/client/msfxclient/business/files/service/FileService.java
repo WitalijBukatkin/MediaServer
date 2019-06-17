@@ -5,7 +5,6 @@ import javafx.beans.property.StringProperty;
 import ru.mediaserver.client.msfxclient.business.files.converter.Base64Encoder;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
 import ru.mediaserver.client.msfxclient.business.files.repository.FileRepository;
-import ru.mediaserver.client.msfxclient.business.files.repository.FileRepositoryImpl;
 import ru.mediaserver.client.msfxclient.business.files.repository.InMemoryFileRepositoryImpl;
 import ru.mediaserver.client.msfxclient.business.files.service.task.DownloadTask;
 import ru.mediaserver.client.msfxclient.business.files.service.task.UploadTask;
@@ -34,7 +33,7 @@ public class FileService {
     }
 
     public FileService() {
-        repository = new FileRepositoryImpl();
+        repository = new InMemoryFileRepositoryImpl();
         logger.info(repository.getClass().getName() + " is starting");
     }
     
