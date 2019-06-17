@@ -12,11 +12,13 @@ import static ru.mediaserver.client.msfxclient.business.files.service.FileServic
 
 public class UploadTask extends Service<Void> {
     private FileRepository repository;
+    private String user;
     private String path;
     private File input;
 
-    public UploadTask(FileRepository repository, String path, File input) {
+    public UploadTask(FileRepository repository, String user, String path, File input) {
         this.repository = repository;
+        this.user = user;
         this.path = path;
         this.input = input;
     }
@@ -27,7 +29,7 @@ public class UploadTask extends Service<Void> {
             @Override
             protected Void call() throws Exception {
                 eventBarProperty.set(input.getName() + " started upload");
-                if (!repository.upload(path, input.getName(), new FileInputStream(input))) {
+                if (!repository.upload(user, path, input.getName(), new FileInputStream(input))) {
                     throw new IOException();
                 }
                 eventBarProperty.set(input.getName() + " is uploaded");

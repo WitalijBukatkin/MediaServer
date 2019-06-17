@@ -11,7 +11,7 @@ public interface FileRepository {
 
     boolean delete(String user, String path);
 
-    boolean upload(String user, String path, InputStream inputStream) throws IOException;
+    boolean upload(String user, String path, String name, InputStream inputStream) throws IOException;
 
     InputStream download(String user, String path) throws IOException;
 

@@ -83,11 +83,10 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
     }
 
     @Override
-    public boolean upload(String user, String path, InputStream inputStream) throws IOException {
+    public boolean upload(String user, String path, String name, InputStream inputStream) throws IOException {
         String pathWithOutName = FileUtil.getPathWithOutName(path);
-        String name = FileUtil.getNameOfPath(path);
 
-        FileProperty property = new FileProperty(name, path, FileType.NONE, inputStream.available());
+        FileProperty property = new FileProperty(name, path + "/" + name, FileType.NONE, inputStream.available());
 
         List<FileProperty> properties = files.get(pathWithOutName);
 
@@ -97,7 +96,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
 
         properties.add(property);
 
-        values.put(path, inputStream.readAllBytes());
+        values.put(path + "/" + name, inputStream.readAllBytes());
         return true;
     }
 

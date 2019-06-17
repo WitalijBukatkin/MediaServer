@@ -100,7 +100,7 @@ public class FilesPresenter implements Initializable {
                 pane.setEffect(null);
                 Dragboard dragboard = d.getDragboard();
                 File file = dragboard.getFiles().get(0);
-                service.upload(file);
+                service.upload(SecurityUtil.getUserName(), file);
                 update();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -149,12 +149,10 @@ public class FilesPresenter implements Initializable {
 
     public void download() {
         FileChooser fileChooser = new FileChooser();
-
         FileProperty source = FileGrid.getSelectedFile().getFileProperty();
-
         fileChooser.setInitialFileName(source.getName() + (source.getType() == FileType.DIRECTORY ? ".zip" : ""));
-
         File file = fileChooser.showSaveDialog(fileGrid.getScene().getWindow());
+
         if (file != null) {
             var download = service.download(SecurityUtil.getUserName(), source.getPath(), file);
 
@@ -169,7 +167,7 @@ public class FilesPresenter implements Initializable {
         File file = fileChooser.showOpenDialog(fileGrid.getScene().getWindow());
 
         if (file != null) {
-            var upload = service.upload(file);
+            var upload = service.upload(SecurityUtil.getUserName(), file);
             upload.setOnSucceeded((event) ->
                     update());
 

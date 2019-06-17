@@ -43,8 +43,7 @@ public class FileRepositoryImpl implements FileRepository {
     @Override
     public List<FileProperty> get(String user, String path) {
         try {
-            return repository.get(SecurityUtil.getUserName(), path)
-                    .execute().body();
+            return repository.get(user, path).execute().body();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -54,8 +53,7 @@ public class FileRepositoryImpl implements FileRepository {
     @Override
     public boolean delete(String user, String path) {
         try {
-            return repository.delete(SecurityUtil.getUserName(), path)
-                    .execute().isSuccessful();
+            return repository.delete(user, path).execute().isSuccessful();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -64,18 +62,18 @@ public class FileRepositoryImpl implements FileRepository {
 
 
     @Override
-    public boolean upload(String path, String name, InputStream file) throws IOException {
+    public boolean upload(String user, String path, String name, InputStream file) throws IOException {
         RequestBody requestFile = RequestBody.create(null, file.readAllBytes());
 
         MultipartBody.Part body = MultipartBody.Part
                 .createFormData("value", name, requestFile);
 
-        return repository.upload(body, SecurityUtil.getUserName(), path).execute().isSuccessful();
+        return repository.upload(body, user, path).execute().isSuccessful();
     }
 
     @Override
     public InputStream download(String user, String path) throws IOException {
-        return Objects.requireNonNull(repository.download(SecurityUtil.getUserName(), path)
+        return Objects.requireNonNull(repository.download(user, path)
                 .execute().body()).byteStream();
     }
 

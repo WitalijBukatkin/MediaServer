@@ -68,11 +68,11 @@ public class FileService {
         return downloadTask;
     }
 
-    public UploadTask upload(File input) {
+    public UploadTask upload(String user, File input) {
         logger.info("UPLOAD " + currentDir);
         String encodedPath = encodePath(currentDir);
 
-        UploadTask uploadTask = new UploadTask(repository, encodedPath, input);
+        UploadTask uploadTask = new UploadTask(repository, user, encodedPath, input);
         uploadTask.start();
         return uploadTask;
     }
