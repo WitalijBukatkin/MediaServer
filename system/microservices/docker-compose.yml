@@ -16,7 +16,7 @@ services:
   file-service:
     environment:
       CONFIG_SERVICE_PASSWORD: rock64
-      CONFIG_SERVICE_URI: "http://config"
+      CONFIG_SERVICE_URI: "http://172.19.0.2"
       ROOT_FILE_PATH: /mediaserver/
     build: file-service
     volumes:
