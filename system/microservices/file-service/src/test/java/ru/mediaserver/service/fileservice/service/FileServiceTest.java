@@ -15,6 +15,8 @@ import ru.mediaserver.service.fileservice.repository.inmemory.InMemoryFileReposi
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -22,6 +24,7 @@ import java.util.zip.ZipOutputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static ru.mediaserver.service.fileservice.FileTestData.*;
+import static ru.mediaserver.service.fileservice.model.FileType.DIRECTORY;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {FileServiceImpl.class, InMemoryFileRepositoryImpl.class})
@@ -39,8 +42,9 @@ public class FileServiceTest {
     @Test
     public void getFromRoot() {
         List<FileProperty> actual = service.get(userName, userName);
-        List<FileProperty> expected = repository.get(userName, userName);
 
+        List<FileProperty> expected = new ArrayList<>(Collections.singletonList(new FileProperty("...", "", DIRECTORY, 0)));
+        expected.addAll(repository.get(userName, userName));
         assertEquals(expected, actual);
     }
 
@@ -49,7 +53,7 @@ public class FileServiceTest {
         List<FileProperty> actual = service.get(userName, FOLDER1.getPath());
         List<FileProperty> expected = repository.get(userName, FOLDER1.getPath());
 
-        FileProperty back = new FileProperty("...", userName, FileType.DIRECTORY, 0);
+        FileProperty back = new FileProperty("...", userName, DIRECTORY, 0);
         expected.add(0, back);
 
         assertEquals(expected, actual);

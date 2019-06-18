@@ -31,39 +31,32 @@
                <buttons>
                    <Button onAction="#createDirectory">
                        <graphic>
-                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                               <Image url="@controls/icons8-add_folder_2.png"/>
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                               <Image url="@controls/icons8-add-folder.png"/>
                            </ImageView>
                        </graphic>
                    </Button>
                    <Button onAction="#delete">
                        <graphic>
-                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                <Image url="@controls/icons8-trash.png"/>
                            </ImageView>
                        </graphic>
                    </Button>
                    <Button onAction="#download">
                        <graphic>
-                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                <Image url="@controls/icons8-download_from_cloud.png"/>
                            </ImageView>
                        </graphic>
                    </Button>
                    <Button onAction="#upload">
                        <graphic>
-                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                <Image url="@controls/icons8-upload_to_cloud.png"/>
                            </ImageView>
                        </graphic>
                    </Button>
-<!--                   <Button>-->
-<!--                       <graphic>-->
-<!--                           <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                               <Image url="@controls/icons8-paper_plane.png"/>-->
-<!--                           </ImageView>-->
-<!--                       </graphic>-->
-<!--                   </Button>-->
                </buttons>
            </ButtonBar>
            <ButtonBar fx:id="copyMoveBar" styleClass="buttonBarMain" visible="false">

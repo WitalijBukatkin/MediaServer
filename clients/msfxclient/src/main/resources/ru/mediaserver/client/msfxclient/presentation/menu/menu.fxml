@@ -6,100 +6,92 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import java.net.URL?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" styleClass="leftpanel_main"
-            xmlns="http://javafx.com/javafx/9.0.4"
-            BorderPane.alignment="CENTER"
-            fx:controller="ru.mediaserver.client.msfxclient.presentation.menu.MenuPresenter" fx:id="pane">
+<BorderPane fx:id="pane" styleClass="leftpanel_main" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mediaserver.client.msfxclient.presentation.menu.MenuPresenter">
     <left>
         <VBox BorderPane.alignment="CENTER">
             <Pane prefHeight="99.0" prefWidth="200.0" styleClass="leftpanel_login">
                 <VBox.margin>
-                    <Insets bottom="2.0"/>
+                    <Insets bottom="2.0" />
                 </VBox.margin>
                 <Label layoutX="27.0" layoutY="29.0" prefHeight="42.0" prefWidth="127.0" text="Vitaliy">
                     <font>
-                        <Font size="24.0"/>
+                        <Font size="24.0" />
                     </font>
                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@img/icons8-user.png"/>
+                        <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@img/icons8-user.png" />
                         </ImageView>
                     </graphic>
                 </Label>
             </Pane>
 
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0"
-                    prefWidth="200" text="Home" onAction="#clickHomeButton">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#clickHomeButton" prefHeight="50.0" prefWidth="200" text="Home">
                 <padding>
-                    <Insets left="40.0"/>
+                    <Insets left="40.0" />
                 </padding>
                 <font>
-                    <Font size="12.0"/>
+                    <Font size="12.0" />
                 </font>
                 <graphic>
-                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@img/icons8-home.png"/>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/icons8-home.png" />
                     </ImageView>
                 </graphic>
                 <VBox.margin>
-                    <Insets left="2.0" right="2.0"/>
+                    <Insets left="2.0" right="2.0" />
                 </VBox.margin>
             </Button>
 
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0"
-                    prefWidth="200" text="Documents" onAction="#clickDocumentsButton">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#clickDocumentsButton" prefHeight="50.0" prefWidth="200" text="Documents">
                 <padding>
-                    <Insets left="40.0"/>
+                    <Insets left="40.0" />
                 </padding>
                 <font>
-                    <Font size="12.0"/>
+                    <Font size="12.0" />
                 </font>
                 <graphic>
-                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@img/icons8-documents.png"/>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/icons8-documents.png" />
                     </ImageView>
                 </graphic>
             </Button>
 
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" prefHeight="50.0"
-                    prefWidth="200.0" text="Downloads" onAction="#clickDownloadsButton">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" mnemonicParsing="false" onAction="#clickDownloadsButton" prefHeight="50.0" prefWidth="200.0" text="Downloads">
                 <padding>
-                    <Insets left="40.0"/>
+                    <Insets left="40.0" />
                 </padding>
                 <font>
-                    <Font size="12.0"/>
+                    <Font size="12.0" />
                 </font>
                 <graphic>
-                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@img/icons8-download.png"/>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/icons8-download.png" />
                     </ImageView>
                 </graphic>
                 <VBox.margin>
-                    <Insets left="2.0" right="2.0"/>
+                    <Insets left="2.0" right="2.0" />
                 </VBox.margin>
             </Button>
 
-            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="161.0"
-                    prefHeight="50.0" prefWidth="200.0" text="Settings" onAction="#clickSettingButton">
+            <Button alignment="BASELINE_LEFT" graphicTextGap="10.0" layoutX="10.0" layoutY="161.0" onAction="#clickSettingButton" prefHeight="50.0" prefWidth="200.0" text="Settings">
                 <padding>
-                    <Insets left="40.0"/>
+                    <Insets left="40.0" />
                 </padding>
                 <font>
-                    <Font size="12.0"/>
+                    <Font size="12.0" />
                 </font>
                 <graphic>
-                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@img/icons8-settings.png"/>
+                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@img/icons8-settings.png" />
                     </ImageView>
                 </graphic>
                 <VBox.margin>
-                    <Insets left="2.0" right="2.0"/>
+                    <Insets left="2.0" right="2.0" />
                 </VBox.margin>
             </Button>
             <stylesheets>
-                <URL value="@menu.css"/>
+                <URL value="@menu.css" />
             </stylesheets>
         </VBox>
     </left>
 </BorderPane>
-

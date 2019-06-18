@@ -21,6 +21,7 @@ public class Launcher extends Application {
                 .add(getClass().getResource("launcher.css").toExternalForm());
 
         stage.setScene(scene);
+        stage.setTitle("MediaServer Home");
         stage.show();
     }
 
