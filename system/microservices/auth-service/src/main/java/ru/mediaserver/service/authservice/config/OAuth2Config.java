@@ -52,19 +52,9 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
-					.withClient("test")
-					.authorizedGrantTypes("refresh_token", "password")
-					.scopes("ui")
-				.and()
-					.withClient("test")
-					.secret(encoder().encode("clientSecret"))
+					.withClient("service")
+					.secret(encoder().encode("secret"))
 					.scopes("read", "write")
-					.authorizedGrantTypes("password", "refresh_token")
-				.and()
-					.withClient("file-service")
-					.secret(encoder().encode("clientSecret"))
-					.scopes("read", "write")
-					.authorizedGrantTypes("client_credentials");
+					.authorizedGrantTypes("password");
 	}
-
 }

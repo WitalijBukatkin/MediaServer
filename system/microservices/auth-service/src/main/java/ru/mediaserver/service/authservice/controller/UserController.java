@@ -10,7 +10,7 @@ import java.security.Principal;
 
 @RestController
 @EnableResourceServer
-@RequestMapping("/user")
+@RequestMapping("/oauth")
 public class UserController {
 	@Autowired
 	private UserService userService;
