@@ -13,6 +13,7 @@ import ru.mediaserver.service.fileservice.util.FileUtil;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,30 +30,30 @@ public class FileServiceController {
     }
 
     @GetMapping({"/get/{user}", "/get/{user}/{path}"})
-    public List<FileProperty> get(@PathVariable String user, @PathVariable(required = false) String path) {
+    public List<FileProperty> get(Principal user, @PathVariable("user") String user1, @PathVariable(required = false) String path) {
         String adjust = FileUtil.pathAdjust(path);
 
         Logger.getLogger("GET").log(Level.INFO, adjust);
 
-        return service.get(user, adjust);
+        return service.get(user.getName(), adjust);
     }
 
     @DeleteMapping(path = "/{user}/{path}")
-    public void delete(@PathVariable String user, @PathVariable String path) {
+    public void delete(Principal user, @PathVariable("user") String user1, @PathVariable String path) {
         String adjust = FileUtil.pathAdjust(path);
 
         Logger.getLogger("DELETE").log(Level.INFO, adjust);
 
-        service.delete(user, adjust);
+        service.delete(user.getName(), adjust);
     }
 
     @PostMapping(path = "")
-    public ResponseEntity<Object> upload(@RequestParam("value") MultipartFile file, @RequestParam("user") String user, @RequestParam("path") String destination) throws IOException {
+    public ResponseEntity<Object> upload(Principal user, @RequestParam("value") MultipartFile file, @RequestParam("user") String user1, @RequestParam("path") String destination) throws IOException {
         String adjust = FileUtil.pathAdjust(destination);
 
         Logger.getLogger("UPLOAD").log(Level.INFO, adjust);
 
-        String uploaded = service.upload(user, file.getOriginalFilename(), adjust, file.getInputStream());
+        String uploaded = service.upload(user.getName(), file.getOriginalFilename(), adjust, file.getInputStream());
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/get/{user}").buildAndExpand(uploaded)
@@ -62,7 +63,7 @@ public class FileServiceController {
     }
 
     @GetMapping(path = {"/download/{user}", "/download/{user}/{path}"})
-    public void download(HttpServletResponse response, @PathVariable String user, @PathVariable(required = false) String path) throws IOException {
+    public void download(Principal user, HttpServletResponse response, @PathVariable("user") String user1, @PathVariable(required = false) String path) throws IOException {
         String adjust = FileUtil.pathAdjust(path);
 
         Logger.getLogger("DOWNLOAD").log(Level.INFO, adjust);
@@ -71,38 +72,38 @@ public class FileServiceController {
 
         response.setHeader("Content-Disposition", "inline; filename=\"" + name + "\"");
 
-        FileProperty property = service.download(user, adjust, response.getOutputStream());
+        FileProperty property = service.download(user.getName(), adjust, response.getOutputStream());
 
         response.setContentLength((int) property.getLength());
     }
 
     @GetMapping(path = "/copy/{user}/from/{from}/to/{to}")
-    public void copy(@PathVariable String user, @PathVariable String from, @PathVariable String to) throws IOException{
+    public void copy(Principal user, @PathVariable("user") String user1, @PathVariable String from, @PathVariable String to) throws IOException{
         String adjustFrom = FileUtil.pathAdjust(from);
         String adjustTo = FileUtil.pathAdjust(to);
 
         Logger.getLogger("COPY").log(Level.INFO, adjustFrom.concat(" -> ").concat(adjustTo));
 
-        service.copy(user, adjustFrom, adjustTo);
+        service.copy(user.getName(), adjustFrom, adjustTo);
     }
 
     @GetMapping(path = "/move/{user}/from/{from}/to/{to}")
-    public void move(@PathVariable String user, @PathVariable String from, @PathVariable String to) throws IOException{
+    public void move(Principal user, @PathVariable("user") String user1, @PathVariable String from, @PathVariable String to) throws IOException{
         String adjustFrom = FileUtil.pathAdjust(from);
         String adjustTo = FileUtil.pathAdjust(to);
 
         Logger.getLogger("MOVE").log(Level.INFO, adjustFrom.concat(" -> ").concat(adjustTo));
 
-        service.move(user, adjustFrom, adjustTo);
+        service.move(user.getName(), adjustFrom, adjustTo);
     }
 
     @GetMapping(path = "/create/{user}/{path}")
-    public ResponseEntity<Object> createDirectory(@PathVariable String user, @PathVariable String path) throws IOException{
+    public ResponseEntity<Object> createDirectory(Principal user, @PathVariable("user") String user1, @PathVariable String path) throws IOException{
         String adjust = FileUtil.pathAdjust(path);
 
         Logger.getLogger("CREATE DIRECTORY").log(Level.INFO, adjust);
 
-        service.createDirectory(user, adjust);
+        service.createDirectory(user.getName(), adjust);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/get/{user}").buildAndExpand(adjust)

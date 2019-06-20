@@ -1,11 +1,10 @@
 server:
   port: 8100
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://${AUTH_SERVICE_URI}:5000/oauth/current
 
 spring:
   application:

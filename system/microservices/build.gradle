@@ -23,3 +23,24 @@ allprojects{
 
 group = 'ru.mediaserver.system'
 version = '0.0.1-SNAPSHOT'
+
+task deploy(dependsOn: processResources) {
+    doFirst{
+        ssh.run {
+            session(remotes.server) {
+                execute 'mkdir /usr/local/microservices', ignoreError: true
+                put from: file('docker-compose.yml'), into: '/usr/local/microservices/'
+            }
+        }
+    }
+}
+
+task run(dependsOn: deploy){
+    doFirst{
+        ssh.run {
+            session(remotes.server) {
+                execute 'docker-compose up --build', ignoreError: true
+            }
+        }
+    }
+}

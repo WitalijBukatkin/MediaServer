@@ -28,7 +28,7 @@ public class FileRepositoryImplTest extends AbstractFileRepositoryTest {
 
     @Before
     public void setUp() throws IOException {
-        File root = new File(fileServiceConfiguration.getRootFilePath().concat(ROOT.getPath()));
+        File root = new File(fileServiceConfiguration.getRootFilePath().concat(ROOT.getPath().concat("rock64")));
 
         File file1 = root.toPath().resolve(FILE1.getName()).toFile();
         File file2 = root.toPath().resolve(FILE2.getName()).toFile();

@@ -44,19 +44,19 @@ public class FileUtil {
                 path.substring(0, path.lastIndexOf("/")) : path;
     }
 
-    public static FileProperty createPropertyWithPreview(File file, FileServiceConfiguration fileServiceConfiguration){
-        FileProperty property = createPropertyOfFile(file, fileServiceConfiguration);
+    public static FileProperty createPropertyWithPreview(File file, FileServiceConfiguration fileServiceConfiguration, String user){
+        FileProperty property = createPropertyOfFile(file, fileServiceConfiguration, user);
         createPreview(file, property);
         return property;
     }
 
-    public static FileProperty createPropertyOfFile(File file, FileServiceConfiguration fileServiceConfiguration) {
+    public static FileProperty createPropertyOfFile(File file, FileServiceConfiguration fileServiceConfiguration, String user) {
         FileProperty fileProperty = new FileProperty();
 
         fileProperty.setName(file.getName());
 
         fileProperty.setPath(file.getPath()
-                .replace(fileServiceConfiguration.getRootFilePath(), ""));
+                .replace(fileServiceConfiguration.getRootFilePath().concat(user), ""));
 
         fileProperty.setType(file.isDirectory() ?
                 FileType.DIRECTORY :

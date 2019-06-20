@@ -19,7 +19,7 @@ import org.controlsfx.control.PopOver;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
 import ru.mediaserver.client.msfxclient.business.files.model.FileType;
 import ru.mediaserver.client.msfxclient.business.files.service.FileService;
-import ru.mediaserver.client.msfxclient.business.files.util.SecurityUtil;
+import ru.mediaserver.client.msfxclient.business.util.SecurityUtil;
 import ru.mediaserver.client.msfxclient.presentation.control.FileGrid;
 import ru.mediaserver.client.msfxclient.presentation.event.DragFileHandler;
 import ru.mediaserver.client.msfxclient.presentation.menu.files.namepanel.NamePanelPresenter;

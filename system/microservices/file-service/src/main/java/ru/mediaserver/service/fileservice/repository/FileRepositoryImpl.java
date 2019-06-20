@@ -30,18 +30,21 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public List<FileProperty> get(String user, String path) {
-        File file = new File(fileServiceConfiguration.getRootFilePath().concat(path));
+        File file = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(path));
 
         if(file.exists()){
             List<FileProperty> list = new ArrayList<>();
 
             if(file.isFile()){
-                list.add(createPropertyWithPreview(file, fileServiceConfiguration));
+                list.add(createPropertyWithPreview(file, fileServiceConfiguration, user));
             }
             else {
                 for(File item : Objects.requireNonNull(file.listFiles())){
                     if(!item.isHidden()) {
-                        list.add(createPropertyWithPreview(item, fileServiceConfiguration));
+                        list.add(createPropertyWithPreview(item, fileServiceConfiguration, user));
                     }
                 }
             }
@@ -55,7 +58,10 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public boolean delete(String user, String path) {
-        File file = new File(fileServiceConfiguration.getRootFilePath().concat(path));
+        File file = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(path));
 
         if (file.exists()) {
             try {
@@ -77,11 +83,10 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public String upload(String user, String path, InputStream inputStream) throws IOException {
-        File output = new File(fileServiceConfiguration.getRootFilePath().concat(path));
-
-//        if(output.exists()){
-//           return null;
-//        }
+        File output = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(path));
 
         try (FileOutputStream outputStream = new FileOutputStream(output)) {
             IOUtils.copy(inputStream, outputStream);
@@ -93,18 +98,21 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public List<FileProperty> download(String user, String path, OutputStream outputStream) throws IOException {
-        File root = new File(fileServiceConfiguration.getRootFilePath().concat(path));
+        File root = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(path));
 
         if(root.exists()) {
             if (root.isDirectory()) {
                 List<FileProperty> files = new ArrayList<>();
                 for (File file : Objects.requireNonNull(root.listFiles())) {
-                    files.add(createPropertyOfFile(file, fileServiceConfiguration));
+                    files.add(createPropertyOfFile(file, fileServiceConfiguration, user));
                 }
                 return files;
             } else {
                 FileUtils.copyFile(root, outputStream);
-                return List.of(createPropertyOfFile(root, fileServiceConfiguration));
+                return List.of(createPropertyOfFile(root, fileServiceConfiguration, user));
             }
 
         }
@@ -113,8 +121,15 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public boolean copy(String user, String pathOf, String pathTo) {
-        File of = new File(fileServiceConfiguration.getRootFilePath().concat(pathOf));
-        File to = new File(fileServiceConfiguration.getRootFilePath().concat(pathTo));
+        File of = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(pathOf));
+
+        File to = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(pathTo));
 
         if(of.exists()) {
             try {
@@ -134,8 +149,15 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public boolean move(String user, String pathOf, String pathTo) {
-        File of = new File(fileServiceConfiguration.getRootFilePath().concat(pathOf));
-        File to = new File(fileServiceConfiguration.getRootFilePath().concat(pathTo));
+        File of = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(pathOf));
+
+        File to = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(pathTo));
 
         if(of.exists()) {
             try {
@@ -150,7 +172,10 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public boolean createDirectory(String user, String path) {
-        File directory = new File(fileServiceConfiguration.getRootFilePath().concat(path));
+        File directory = new File(fileServiceConfiguration.getRootFilePath()
+                .concat("/")
+                .concat(user)
+                .concat(path));
 
         if(directory.exists()){
             return false;

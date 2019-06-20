@@ -1,12 +1,10 @@
 package ru.mediaserver.client.msfxclient.business.files.repository;
 
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
-import ru.mediaserver.client.msfxclient.business.files.util.SecurityUtil;
+import ru.mediaserver.client.msfxclient.business.util.RetrofitBuilderUtil;
+import ru.mediaserver.client.msfxclient.business.util.ServerUtil;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class FileRepositoryImpl implements FileRepository {
@@ -22,22 +19,12 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Inject
     public FileRepositoryImpl() {
-        this(SecurityUtil.getServer());
+        this(ServerUtil.serverUrl);
     }
 
     public FileRepositoryImpl(String baseUrl) {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.MINUTES)
-                .writeTimeout(5, TimeUnit.MINUTES)
-                .readTimeout(5, TimeUnit.MINUTES)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(client)
-                .addConverterFactory(JacksonConverterFactory.create())
-                .build();
-        repository = retrofit.create(FileApi.class);
+        repository = RetrofitBuilderUtil.getRetrofit(ServerUtil.FileServicePort)
+                .create(FileApi.class);
     }
 
     @Override
