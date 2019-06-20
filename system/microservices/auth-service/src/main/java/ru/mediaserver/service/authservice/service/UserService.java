@@ -22,11 +22,11 @@ public class UserService implements org.springframework.security.core.userdetail
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.getUserByUserName(username);
+        return userRepository.getUserByUsername(username);
     }
 
     public User register(User user){
-        User existing = userRepository.getUserByUserName(user.getUsername());
+        User existing = userRepository.getUserByUsername(user.getUsername());
 
         if(existing!=null) {
             throw new IllegalArgumentException("user already exists: " + existing.getUsername());

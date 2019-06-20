@@ -6,7 +6,7 @@ import ru.mediaserver.service.authservice.model.User;
 
 
 public interface UserRepository extends Repository<User, Long>{
-    User getUserByUserName(String name);
+    User getUserByUsername(String name);
 
     @Transactional
     User save(User user);

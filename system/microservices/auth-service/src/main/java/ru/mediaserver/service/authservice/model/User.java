@@ -1,5 +1,6 @@
 package ru.mediaserver.service.authservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,16 +16,20 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private long id;
-    private String userName;
+    private String username;
     private String password;
-    private byte[] photo;
-    private int age;
-    private boolean enabled;
 
-    public User(String userName, String password, boolean enabled) {
-        this.userName = userName;
+    @JsonIgnore
+    private byte[] photo;
+
+    @JsonIgnore
+    private int age;
+
+    private boolean enabled = true;
+
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
-        this.enabled = enabled;
     }
 
     public User() {
@@ -40,11 +45,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -81,14 +86,13 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
+    @JsonIgnore
     @Override
     public List<GrantedAuthority> getAuthorities() {
         return null;
     }
 
-    public void setAuthorities(List<GrantedAuthority> authorities) {
-    }
-
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return isEnabled();
@@ -99,6 +103,7 @@ public class User implements UserDetails {
         return isEnabled();
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return isEnabled();
