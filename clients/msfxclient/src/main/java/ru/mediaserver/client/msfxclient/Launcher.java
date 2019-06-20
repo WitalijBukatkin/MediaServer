@@ -4,6 +4,9 @@ import com.airhacks.afterburner.injection.Injector;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.mediaserver.client.msfxclient.business.util.SecurityUtil;
+import ru.mediaserver.client.msfxclient.presentation.auth.auth.AuthPresenter;
+import ru.mediaserver.client.msfxclient.presentation.auth.auth.AuthView;
 import ru.mediaserver.client.msfxclient.presentation.menu.MenuView;
 
 public class Launcher extends Application {
@@ -14,15 +17,29 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        MenuView menuView = new MenuView();
+        if(SecurityUtil.getAccessToken() == null){
+            var authView = new AuthView();
 
-        var scene = new Scene(menuView.getView());
-        scene.getStylesheets()
-                .add(getClass().getResource("launcher.css").toExternalForm());
+            Stage stageNotPrimary = new Stage();
+            stageNotPrimary.setScene(new Scene(authView.getView()));
 
-        stage.setScene(scene);
-        stage.setTitle("MediaServer Home");
-        stage.show();
+            var presenter = (AuthPresenter) authView.getPresenter();
+            presenter.stage = stageNotPrimary;
+
+            stageNotPrimary.showAndWait();
+        }
+
+        if(SecurityUtil.getAccessToken() != null){
+            MenuView menuView = new MenuView();
+
+            var scene = new Scene(menuView.getView());
+            scene.getStylesheets()
+                    .add(getClass().getResource("launcher.css").toExternalForm());
+
+            stage.setScene(scene);
+            stage.setTitle("MediaServer Home");
+            stage.show();
+        }
     }
 
     @Override

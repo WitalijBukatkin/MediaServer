@@ -2,8 +2,10 @@ package ru.mediaserver.client.msfxclient.presentation.menu;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import ru.mediaserver.client.msfxclient.business.files.service.FileService;
+import ru.mediaserver.client.msfxclient.business.util.SecurityUtil;
 import ru.mediaserver.client.msfxclient.presentation.menu.files.FilesPresenter;
 import ru.mediaserver.client.msfxclient.presentation.menu.files.FilesView;
 
@@ -14,6 +16,7 @@ import java.util.ResourceBundle;
 public class MenuPresenter implements Initializable {
 
     public BorderPane pane;
+    public Label name;
 
     private FilesView filesView = new FilesView();
     private FilesPresenter filesPresenter = (FilesPresenter) filesView.getPresenter();
@@ -24,6 +27,8 @@ public class MenuPresenter implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         pane.setCenter(filesView.getView());
+
+        name.textProperty().bind(SecurityUtil.userNameProperty());
     }
 
     public void clickHomeButton(ActionEvent actionEvent) {
@@ -35,9 +40,5 @@ public class MenuPresenter implements Initializable {
     }
 
     public void clickDownloadsButton(ActionEvent actionEvent) {
-    }
-
-    public void clickSettingButton(ActionEvent actionEvent) {
-
     }
 }
