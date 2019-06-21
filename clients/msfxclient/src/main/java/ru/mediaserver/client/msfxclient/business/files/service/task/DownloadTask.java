@@ -43,6 +43,9 @@ public class DownloadTask extends Service<Void> {
 
                     eventBarProperty.set(path + " is downloaded");
                 }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
                 return null;
             }
         };

@@ -3,6 +3,7 @@ package ru.mediaserver.client.msfxclient;
 import com.airhacks.afterburner.injection.Injector;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.mediaserver.client.msfxclient.business.util.SecurityUtil;
 import ru.mediaserver.client.msfxclient.presentation.auth.auth.AuthPresenter;
@@ -17,10 +18,17 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        stage.getIcons()
+                .add(new Image("file:/Users/vitalijbukatkin/Desktop/MediaServer/clients/msfxclient/src/main/resources/ic_launcher.png"));
+
         if(SecurityUtil.getAccessToken() == null){
             var authView = new AuthView();
 
             Stage stageNotPrimary = new Stage();
+
+            stageNotPrimary.getIcons()
+                    .add(new Image("file:/Users/vitalijbukatkin/Desktop/MediaServer/clients/msfxclient/src/main/resources/ic_launcher.png"));
+
             stageNotPrimary.setScene(new Scene(authView.getView()));
 
             var presenter = (AuthPresenter) authView.getPresenter();

@@ -1,2 +1,7 @@
 file-service:
   rootFilePath: ${TEST_ROOT_FILE_PATH}
+
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://${AUTH_SERVICE_URI}:5000/oauth/current

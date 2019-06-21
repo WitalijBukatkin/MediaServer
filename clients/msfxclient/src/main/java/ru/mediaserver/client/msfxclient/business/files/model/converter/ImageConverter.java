@@ -1,4 +1,4 @@
-package ru.mediaserver.client.msfxclient.business.files.converter;
+package ru.mediaserver.client.msfxclient.business.files.model.converter;
 
 import javafx.scene.image.Image;
 

@@ -16,7 +16,7 @@
                 </VBox.margin>
                 <Label layoutX="27.0" layoutY="29.0" prefHeight="42.0" prefWidth="127.0" fx:id="name">
                     <font>
-                        <Font size="14.0" />
+                        <Font size="11.0" />
                     </font>
                     <graphic>
                         <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">

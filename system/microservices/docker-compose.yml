@@ -28,9 +28,9 @@ services:
   auth-service:
     environment:
       CONFIG_SERVICE_PASSWORD: rock64
-      CONFIG_SERVICE_URI: "http://config-service"
+      CONFIG_SERVICE_URI: "http://config-service:8888"
       POSTGRES_PASSWORD: rock64
-      POSTGRES_URI: "db"
+      POSTGRES_URI: "db:5432"
     build: auth-service
     restart: always
     ports:
@@ -43,9 +43,9 @@ services:
   file-service:
     environment:
       CONFIG_SERVICE_PASSWORD: rock64
-      CONFIG_SERVICE_URI: "http://config-service"
+      CONFIG_SERVICE_URI: "http://config-service:8888"
       ROOT_FILE_PATH: /sharedfolders/root/
-      AUTH_SERVICE_URI: "auth-service"
+      AUTH_SERVICE_URI: "http://auth-service:5000"
     build: file-service
     volumes:
       - /sharedfolders/root:/sharedfolders/root

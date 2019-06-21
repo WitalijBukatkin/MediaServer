@@ -2,8 +2,8 @@ package ru.mediaserver.client.msfxclient.business.files.service;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import ru.mediaserver.client.msfxclient.business.files.converter.Base64Encoder;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
+import ru.mediaserver.client.msfxclient.business.files.model.converter.URLEncoder;
 import ru.mediaserver.client.msfxclient.business.files.repository.FileRepository;
 import ru.mediaserver.client.msfxclient.business.files.repository.FileRepositoryImpl;
 import ru.mediaserver.client.msfxclient.business.files.repository.InMemoryFileRepositoryImpl;
@@ -41,7 +41,7 @@ public class FileService {
         if(repository instanceof InMemoryFileRepositoryImpl){
             return path == null || path.equals("") ? "" : path;
         }
-        return Base64Encoder.encode(path);
+        return URLEncoder.encode(path);
     }
 
     public List<FileProperty> get(String user, String path){

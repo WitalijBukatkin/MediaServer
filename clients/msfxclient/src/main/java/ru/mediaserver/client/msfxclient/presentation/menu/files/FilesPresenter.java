@@ -19,6 +19,7 @@ import org.controlsfx.control.PopOver;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
 import ru.mediaserver.client.msfxclient.business.files.model.FileType;
 import ru.mediaserver.client.msfxclient.business.files.service.FileService;
+import ru.mediaserver.client.msfxclient.business.files.util.FileUtil;
 import ru.mediaserver.client.msfxclient.business.util.SecurityUtil;
 import ru.mediaserver.client.msfxclient.presentation.control.FileGrid;
 import ru.mediaserver.client.msfxclient.presentation.event.DragFileHandler;
@@ -69,7 +70,7 @@ public class FilesPresenter implements Initializable {
             if (property.getType() == FileType.DIRECTORY) {
                 openDirectory(property.getPath());
             } else {
-                openFile(property.getPath());
+                openFile(property);
             }
         }));
 
@@ -113,22 +114,25 @@ public class FilesPresenter implements Initializable {
             Dragboard db = event.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
 
-            var path = event.getFileProperty().getPath();
-
-            var tempFile = createTempFile(path);
+            var tempFile = createTempFile(event.getFileProperty());
             content.putFiles(List.of(tempFile));
-
             db.setContent(content);
         });
     }
 
-    public File createTempFile(String path){
-        String name = path.contains("/") ? path.substring(path.lastIndexOf("/") + 1) : path;
+    public File createTempFile(FileProperty property){
+        String path = property.getPath();
+
+        if(property.getType() == FileType.DIRECTORY) {
+            path = path.concat(".zip");
+        }
+
+        String name = FileUtil.getNameOfPath(path);
         try {
-            var tempFile = Files.createTempFile("", name).toFile();
-            service.download(SecurityUtil.getUserName(), path, tempFile);
-            tempFile.deleteOnExit();
-            return tempFile;
+            var file = Files.createTempFile(null, name).toFile();
+            service.download(SecurityUtil.getUserName(), property.getPath(), file);
+            file.deleteOnExit();
+            return file;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -204,8 +208,8 @@ public class FilesPresenter implements Initializable {
         }
     }
 
-    private void openFile(String path) {
-        var tempFile = createTempFile(path);
+    private void openFile(FileProperty property) {
+        var tempFile = createTempFile(property);
         try {
             Desktop.getDesktop().open(tempFile);
         } catch (IOException e) {

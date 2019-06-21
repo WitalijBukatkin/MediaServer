@@ -1,7 +1,7 @@
 package ru.mediaserver.client.msfxclient.business.files.model;
 
 import javafx.scene.image.Image;
-import ru.mediaserver.client.msfxclient.business.files.converter.ImageConverter;
+import ru.mediaserver.client.msfxclient.business.files.model.converter.ImageConverter;
 
 import java.util.Arrays;
 import java.util.Objects;

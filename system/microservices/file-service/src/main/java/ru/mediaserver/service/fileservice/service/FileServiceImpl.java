@@ -6,6 +6,7 @@ import ru.mediaserver.service.fileservice.exception.FileNotFoundException;
 import ru.mediaserver.service.fileservice.model.FileProperty;
 import ru.mediaserver.service.fileservice.model.FileType;
 import ru.mediaserver.service.fileservice.repository.FileRepository;
+import ru.mediaserver.service.fileservice.util.FileUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +77,7 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public FileProperty download(String user, String path, OutputStream outputStream) throws IOException {
-        String name = path.contains("/") ? path.substring(path.indexOf("/") + 1) : path;
+        String name = FileUtil.getNameOfPath(path);
 
         if(outputStream == null){
             throw new IOException("OutputStream is null");

@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 public class FileServiceApplication {
 
 	public static void main(String[] args) throws InterruptedException {
-		Thread.sleep(1000 * 30);
+		TODO: Thread.sleep(1000 * 30);
 
 		SpringApplication.run(FileServiceApplication.class, args);
 	}

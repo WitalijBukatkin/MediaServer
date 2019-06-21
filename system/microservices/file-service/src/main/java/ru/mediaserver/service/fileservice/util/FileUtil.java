@@ -6,7 +6,7 @@ import ru.mediaserver.service.fileservice.configuration.FileServiceConfiguration
 import ru.mediaserver.service.fileservice.exception.FileNotFoundException;
 import ru.mediaserver.service.fileservice.model.FileProperty;
 import ru.mediaserver.service.fileservice.model.FileType;
-import ru.mediaserver.service.fileservice.model.converter.Base64Decoder;
+import ru.mediaserver.service.fileservice.model.converter.URLDecoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,7 +25,7 @@ public class FileUtil {
 
         path = path.replace("\"", "");
 
-        path = Base64Decoder.decode(path);
+        path = URLDecoder.decode(path);
 
         if(path.contains("..")){
             throw new FileNotFoundException(path);
