@@ -25,14 +25,14 @@ public class FileGrid extends GridPane {
 
     private static ObjectProperty<FileItem> dragDetected = new SimpleObjectProperty<>();
 
-    public static ObjectProperty<FileItem> dragDetectedProperty() {
+    static ObjectProperty<FileItem> dragDetectedProperty() {
         return dragDetected;
     }
 
-    public static ObjectProperty<FileItem> selectedFileProperty() {
+    static ObjectProperty<FileItem> selectedFileProperty() {
         return selectedFile;
     }
-    public static ObjectProperty<FileItem> pressedFileProperty() {
+    static ObjectProperty<FileItem> pressedFileProperty() {
         return pressedFile;
     }
 
@@ -42,11 +42,11 @@ public class FileGrid extends GridPane {
     public static ObjectProperty<FileItem> moveFileProperty() {
         return moveFile;
     }
-    public static ObjectProperty<FileItem> renameFileProperty() {
+    static ObjectProperty<FileItem> renameFileProperty() {
         return renameFile;
     }
 
-    public ObjectProperty<DragFileHandler> onDragDetected = new SimpleObjectProperty<>();
+    private ObjectProperty<DragFileHandler> onDragDetected = new SimpleObjectProperty<>();
 
     private ObjectProperty<FileHandler> onCopyFile = new SimpleObjectProperty<>();
     private ObjectProperty<FileHandler> onMoveFile = new SimpleObjectProperty<>();

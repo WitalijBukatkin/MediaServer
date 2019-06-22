@@ -2,6 +2,7 @@ package ru.mediaserver.client.msfxclient.presentation.control;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -11,10 +12,10 @@ import org.controlsfx.control.PopOver;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
 import ru.mediaserver.client.msfxclient.business.files.model.converter.ImageConverter;
 import ru.mediaserver.client.msfxclient.business.files.util.FileImageUtil;
-import ru.mediaserver.client.msfxclient.presentation.menu.files.namepanel.NamePanelPresenter;
-import ru.mediaserver.client.msfxclient.presentation.menu.files.namepanel.NamePanelView;
 import ru.mediaserver.client.msfxclient.presentation.menu.files.rightpanel.RightPanelPresenter;
 import ru.mediaserver.client.msfxclient.presentation.menu.files.rightpanel.RightPanelView;
+
+import java.util.Optional;
 
 import static ru.mediaserver.client.msfxclient.presentation.control.FileGrid.*;
 
@@ -107,20 +108,17 @@ public class FileItem extends VBox {
         });
 
         presenter.rename.setOnAction(event ->{
-            NamePanelView namePanelView = new NamePanelView();
+            TextInputDialog inputDialog = new TextInputDialog(fileProperty.getName());
+            inputDialog.setHeaderText("Rename");
+            inputDialog.setTitle("Rename");
+            Optional<String> result = inputDialog.showAndWait();
 
-            var namePanelPresenter = (NamePanelPresenter) namePanelView.getPresenter();
-            namePanelPresenter.init(fileProperty.getName(), "Rename");
-
-            var popOverRename = new PopOver(namePanelView.getView());
-            popOverRename.show(view);
-
-            namePanelPresenter.confirm.setOnAction(event1 -> {
-                fileProperty.setName(namePanelPresenter.text.getText());
+            result.ifPresent(name -> {
+                fileProperty.setName(name);
                 renameFileProperty().set(this);
-                popOverRename.hide();
-                popOver.hide();
             });
+
+            popOver.hide();
         });
 
         presenter.init(fileProperty);

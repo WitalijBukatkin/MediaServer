@@ -4,10 +4,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -15,7 +13,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import org.controlsfx.control.PopOver;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
 import ru.mediaserver.client.msfxclient.business.files.model.FileType;
 import ru.mediaserver.client.msfxclient.business.files.service.FileService;
@@ -23,8 +20,6 @@ import ru.mediaserver.client.msfxclient.business.files.util.FileUtil;
 import ru.mediaserver.client.msfxclient.business.util.SecurityUtil;
 import ru.mediaserver.client.msfxclient.presentation.control.FileGrid;
 import ru.mediaserver.client.msfxclient.presentation.event.DragFileHandler;
-import ru.mediaserver.client.msfxclient.presentation.menu.files.namepanel.NamePanelPresenter;
-import ru.mediaserver.client.msfxclient.presentation.menu.files.namepanel.NamePanelView;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -33,6 +28,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static ru.mediaserver.client.msfxclient.business.files.service.FileService.eventBarProperty;
@@ -76,13 +72,11 @@ public class FilesPresenter implements Initializable {
 
         fileGrid.setOnCopyFile(property -> showCopyMove());
         fileGrid.setOnMoveFile(property -> showCopyMove());
-
         fileGrid.setOnRenameFile(this::rename);
 
         /*
             drag file
          */
-
         ColorAdjust colorAdjust = new ColorAdjust();
         colorAdjust.setContrast(-0.9);
 
@@ -120,7 +114,7 @@ public class FilesPresenter implements Initializable {
         });
     }
 
-    public File createTempFile(FileProperty property){
+    private File createTempFile(FileProperty property){
         String path = property.getPath();
 
         if(property.getType() == FileType.DIRECTORY) {
@@ -180,7 +174,7 @@ public class FilesPresenter implements Initializable {
         }
     }
 
-    public void rename(FileProperty property){
+    private void rename(FileProperty property){
         if(!service.rename(SecurityUtil.getUserName(), property.getPath(), property.getName())){
             new Alert(Alert.AlertType.ERROR, "File is't renamed").showAndWait();
         }
@@ -192,10 +186,10 @@ public class FilesPresenter implements Initializable {
     }
 
     public void openDocumentDirectory(){
-        openDirectory("Documents");
+        openDirectory("/Documents");
     }
 
-    public void openDirectory(String path) {
+    private void openDirectory(String path) {
         fileGrid.clear();
 
         try {
@@ -217,11 +211,11 @@ public class FilesPresenter implements Initializable {
         }
     }
 
-    public void update() {
+    private void update() {
         openDirectory(service.getCurrentDir());
     }
 
-    public void showCopyMove(){
+    private void showCopyMove(){
         controlsBar.setVisible(false);
         copyMoveBar.setVisible(true);
     }
@@ -258,20 +252,16 @@ public class FilesPresenter implements Initializable {
     }
 
     public void createDirectory() {
-        NamePanelView namePanelView = new NamePanelView();
+        TextInputDialog inputDialog = new TextInputDialog();
+        inputDialog.setHeaderText("Create directory");
+        inputDialog.setTitle("Create directory");
+        Optional<String> result = inputDialog.showAndWait();
 
-        var namePanelPresenter = (NamePanelPresenter) namePanelView.getPresenter();
-        namePanelPresenter.init("", "Create");
-
-        var popOver = new PopOver(namePanelView.getView());
-        popOver.show(controlsBar);
-
-        namePanelPresenter.confirm.setOnAction(event -> {
-            if(!service.createDirectory(SecurityUtil.getUserName(), namePanelPresenter.text.getText())){
+        result.ifPresent(name ->{
+            if(!service.createDirectory(SecurityUtil.getUserName(), name)){
                 new Alert(Alert.AlertType.ERROR, "Create directory is failed!").showAndWait();
             }
             update();
-            popOver.hide();
         });
     }
 }
