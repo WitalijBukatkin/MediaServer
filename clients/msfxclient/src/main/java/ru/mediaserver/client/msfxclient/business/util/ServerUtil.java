@@ -5,5 +5,5 @@ public class ServerUtil {
     public static final String password = "secret";
     public static final String AuthServicePort = "5000";
     public static final String FileServicePort = "8100";
-    public static String serverUrl = "http://localhost";
+    public static String serverUrl = "http://192.168.1.33";
 }

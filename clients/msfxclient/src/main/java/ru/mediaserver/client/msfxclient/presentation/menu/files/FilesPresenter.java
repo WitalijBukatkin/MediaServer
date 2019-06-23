@@ -253,6 +253,7 @@ public class FilesPresenter implements Initializable {
 
     public void createDirectory() {
         TextInputDialog inputDialog = new TextInputDialog();
+
         inputDialog.setHeaderText("Create directory");
         inputDialog.setTitle("Create directory");
         Optional<String> result = inputDialog.showAndWait();

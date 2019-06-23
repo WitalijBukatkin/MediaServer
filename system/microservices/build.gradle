@@ -39,7 +39,7 @@ task run(dependsOn: deploy){
     doFirst{
         ssh.run {
             session(remotes.server) {
-                execute 'docker-compose up --build', ignoreError: true
+                execute 'docker-compose -f /usr/local/microservices/docker-compose.yml up --build'
             }
         }
     }

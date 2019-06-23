@@ -35,9 +35,8 @@ public class UserService implements org.springframework.security.core.userdetail
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         try {
-            runtime.exec("user-conf create "
-                    + user.getUsername() + " "
-                    + user.getPassword());
+            runtime.exec("mkdir /sharedfolders/root/"
+                    + user.getUsername());
         } catch (IOException e) {
             e.printStackTrace();
         }
