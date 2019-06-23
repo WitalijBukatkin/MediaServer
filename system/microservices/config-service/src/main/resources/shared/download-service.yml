@@ -1,0 +1,7 @@
+download-service:
+  rootFilePath: ${ROOT_FILE_PATH}
+
+security:
+  oauth2:
+    resource:
+      userInfoUri: ${AUTH_SERVICE_URI}/oauth/current

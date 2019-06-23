@@ -1,0 +1,10 @@
+server:
+  port: 8200
+spring:
+  application:
+    name: download-service
+  cloud:
+    config:
+      uri: ${CONFIG_SERVICE_URI}
+      password: ${CONFIG_SERVICE_PASSWORD}
+      username: user
