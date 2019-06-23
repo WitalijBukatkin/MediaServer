@@ -1,4 +1,4 @@
-package ru.mediaserver.client.msfxclient.business.files.repository;
+package ru.mediaserver.client.msfxclient.business.files.api;
 
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -20,7 +20,7 @@ public interface FileApi {
     Call<ResponseBody> upload(@Part MultipartBody.Part file, @Part("user") String user, @Part("path") String path);
 
     @Streaming
-    @GET("/file/download/{user}/{path}")
+    @GET("/file/downloads/{user}/{path}")
     Call<ResponseBody> download(@Path("user") String user, @Path("path") String path);
 
     @GET("/file/copy/{user}/from/{from}/to/{to}")

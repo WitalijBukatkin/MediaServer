@@ -1,0 +1,11 @@
+.buttonBarMain {
+    -fx-background-color: white;
+}
+
+.layout_main {
+    -fx-background-color: white;
+}
+
+.tree_main {
+    -fx-background-color: rgb(245, 245, 245);
+}

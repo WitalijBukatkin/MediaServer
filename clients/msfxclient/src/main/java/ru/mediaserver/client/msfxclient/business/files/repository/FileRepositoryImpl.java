@@ -2,6 +2,7 @@ package ru.mediaserver.client.msfxclient.business.files.repository;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import ru.mediaserver.client.msfxclient.business.files.api.FileApi;
 import ru.mediaserver.client.msfxclient.business.files.model.FileProperty;
 import ru.mediaserver.client.msfxclient.business.util.RetrofitBuilderUtil;
 import ru.mediaserver.client.msfxclient.business.util.ServerUtil;

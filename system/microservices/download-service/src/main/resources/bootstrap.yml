@@ -2,7 +2,7 @@ server:
   port: 8200
 spring:
   application:
-    name: download-service
+    name: downloads-service
   cloud:
     config:
       uri: ${CONFIG_SERVICE_URI}
