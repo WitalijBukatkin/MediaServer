@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 public class DownloadServiceApplication {
 
 	public static void main(String[] args) throws InterruptedException {
-		//TODO: Thread.sleep(1000 * 30);
+		Thread.sleep(1000 * 30);
 
 		SpringApplication.run(DownloadServiceApplication.class, args);
 	}

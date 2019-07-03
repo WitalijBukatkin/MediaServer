@@ -16,11 +16,6 @@ public class FileUtil {
                 path.substring(path.lastIndexOf("/") + 1) : path;
     }
 
-    public static String getPathWithOutName(String path){
-        return path.contains("/") ?
-                path.substring(0, path.lastIndexOf("/")) : path;
-    }
-
     public static List<DownloadProperty> createListDownloads(String root){
         File rootFile = new File(root);
 

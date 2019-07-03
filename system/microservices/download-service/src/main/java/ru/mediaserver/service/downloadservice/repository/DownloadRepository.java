@@ -68,6 +68,8 @@ public class DownloadRepository {
 
         File file = new File(root.concat("/").concat(name));
 
-        FileDeleteStrategy.FORCE.delete(file);
+        if(!file.delete()) {
+            FileDeleteStrategy.FORCE.delete(file);
+        }
     }
 }

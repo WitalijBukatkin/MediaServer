@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "downloads-service")
+@ConfigurationProperties(prefix = "download-service")
 public class DownloadServiceConfiguration {
     private String rootFilePath;
 

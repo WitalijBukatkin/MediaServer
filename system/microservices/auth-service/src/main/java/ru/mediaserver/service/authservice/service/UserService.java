@@ -37,6 +37,10 @@ public class UserService implements org.springframework.security.core.userdetail
         try {
             runtime.exec("mkdir /sharedfolders/root/"
                     + user.getUsername());
+            runtime.exec("mkdir /sharedfolders/root/"
+                    + user.getUsername() + "/Downloads");
+            runtime.exec("mkdir /sharedfolders/root/"
+                    + user.getUsername() + "/Documents");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -69,7 +69,8 @@ public class DownloadsPresenter implements Initializable {
                 String name = property.getName() + " / " + property.getLength() / 1000 + "KB";
                 list.add(name);
             }
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
+            e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Update is failed").showAndWait();
         }
     }
