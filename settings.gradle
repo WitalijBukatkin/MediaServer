@@ -1,4 +1,4 @@
-include 'clients:msfxclient',
+include 'clients:msdesktop',
         'system:microservices:config-service',
         'system:microservices:auth-service',
         'system:microservices:file-service',
