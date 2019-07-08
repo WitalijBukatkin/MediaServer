@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import java.net.URL?>
+<BorderPane styleClass="layout_main" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mediaserver.clients.msdesktop.presentation.menu.downloads.DownloadsPresenter">
+
+    <center>
+        <ListView fx:id="downloadsList"/>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="5">
+            <Label fx:id="process" />
+        </HBox>
+    </bottom>
+
+    <stylesheets>
+        <URL value="@downloads.css" />
+    </stylesheets>
+   <top>
+       <StackPane alignment="TOP_RIGHT" prefHeight="40">
+           <ButtonBar fx:id="controlsBar" styleClass="buttonBarMain">
+               <buttons>
+                   <Button onAction="#addLink">
+                       <graphic>
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                               <Image url="@controls/icons8-add-link-48.png" />
+                           </ImageView>
+                       </graphic>
+                   </Button>
+                   <Button onAction="#delete">
+                       <graphic>
+                           <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                               <Image url="@controls/icons8-delete-30.png" />
+                           </ImageView>
+                       </graphic>
+                   </Button>
+               </buttons>
+           </ButtonBar>
+           <padding>
+               <Insets right="20.0" />
+           </padding>
+       </StackPane>
+   </top>
+</BorderPane>
