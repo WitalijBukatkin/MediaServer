@@ -33,5 +33,5 @@ task run(type: JavaExec) {
     description = 'Run this application'
 
     classpath sourceSets.main.runtimeClasspath
-    main = "ru.mediaserver.client.msdesktop.Launcher"
+    main = "ru.mediaserver.clients.msdesktop.Launcher"
 }
