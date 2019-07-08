@@ -31,7 +31,6 @@ task deploy (dependsOn: assemble) {
 apply plugin: 'io.spring.dependency-management'
 
 group = 'ru.mediaserver.system.microservices'
-sourceCompatibility = '10'
 
 repositories {
 	mavenCentral()

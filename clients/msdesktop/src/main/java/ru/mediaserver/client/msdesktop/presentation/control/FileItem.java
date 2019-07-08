@@ -1,6 +1,7 @@
 package ru.mediaserver.client.msdesktop.presentation.control;
 
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
@@ -91,9 +92,9 @@ public class FileItem extends VBox {
     }
 
     private void showRightButtonMenu(){
-        var rightPanelView = new RightPanelView();
-        var view = rightPanelView.getView();
-        var presenter = (RightPanelPresenter) rightPanelView.getPresenter();
+        RightPanelView rightPanelView = new RightPanelView();
+        Parent view = rightPanelView.getView();
+        RightPanelPresenter presenter = (RightPanelPresenter) rightPanelView.getPresenter();
 
         PopOver popOver = new PopOver(view);
 

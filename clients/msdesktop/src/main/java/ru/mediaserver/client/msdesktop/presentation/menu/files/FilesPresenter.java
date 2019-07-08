@@ -16,6 +16,8 @@ import javafx.util.Duration;
 import ru.mediaserver.client.msdesktop.business.files.model.FileProperty;
 import ru.mediaserver.client.msdesktop.business.files.model.FileType;
 import ru.mediaserver.client.msdesktop.business.files.service.FileService;
+import ru.mediaserver.client.msdesktop.business.files.service.task.DownloadTask;
+import ru.mediaserver.client.msdesktop.business.files.service.task.UploadTask;
 import ru.mediaserver.client.msdesktop.business.files.util.FileUtil;
 import ru.mediaserver.client.msdesktop.business.util.SecurityUtil;
 import ru.mediaserver.client.msdesktop.presentation.control.FileGrid;
@@ -27,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -108,8 +111,8 @@ public class FilesPresenter implements Initializable {
             Dragboard db = event.startDragAndDrop(TransferMode.ANY);
             ClipboardContent content = new ClipboardContent();
 
-            var tempFile = createTempFile(event.getFileProperty());
-            content.putFiles(List.of(tempFile));
+            File tempFile = createTempFile(event.getFileProperty());
+            content.putFiles(Collections.singletonList((tempFile)));
             db.setContent(content);
         });
     }
@@ -123,7 +126,7 @@ public class FilesPresenter implements Initializable {
 
         String name = FileUtil.getNameOfPath(path);
         try {
-            var file = Files.createTempFile(null, name).toFile();
+            File file = Files.createTempFile(null, name).toFile();
             service.download(SecurityUtil.getUserName(), property.getPath(), file);
             file.deleteOnExit();
             return file;
@@ -134,9 +137,9 @@ public class FilesPresenter implements Initializable {
     }
 
     public void delete() {
-        var property = FileGrid.getSelectedFile().getFileProperty();
+        FileProperty property = FileGrid.getSelectedFile().getFileProperty();
 
-        var alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure want delete " + property.getPath() + "?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure want delete " + property.getPath() + "?");
         if(alert.showAndWait().get() == ButtonType.OK){
             if(!service.delete(SecurityUtil.getUserName(), property.getPath())) {
                 new Alert(Alert.AlertType.ERROR, "File is't deleted").showAndWait();
@@ -152,7 +155,7 @@ public class FilesPresenter implements Initializable {
         File file = fileChooser.showSaveDialog(fileGrid.getScene().getWindow());
 
         if (file != null) {
-            var download = service.download(SecurityUtil.getUserName(), source.getPath(), file);
+            DownloadTask download = service.download(SecurityUtil.getUserName(), source.getPath(), file);
 
             download.setOnFailed(event ->
                     new Alert(Alert.AlertType.ERROR, "Download file " + file.getName() +" is failed").show());
@@ -165,7 +168,7 @@ public class FilesPresenter implements Initializable {
         File file = fileChooser.showOpenDialog(fileGrid.getScene().getWindow());
 
         if (file != null) {
-            var upload = service.upload(SecurityUtil.getUserName(), file);
+            UploadTask upload = service.upload(SecurityUtil.getUserName(), file);
             upload.setOnSucceeded((event) ->
                     update());
 
@@ -203,7 +206,7 @@ public class FilesPresenter implements Initializable {
     }
 
     private void openFile(FileProperty property) {
-        var tempFile = createTempFile(property);
+        File tempFile = createTempFile(property);
         try {
             Desktop.getDesktop().open(tempFile);
         } catch (IOException e) {
@@ -230,16 +233,16 @@ public class FilesPresenter implements Initializable {
     }
 
     public void applyCopyMove() {
-        var currentDir = service.getCurrentDir();
+        String currentDir = service.getCurrentDir();
 
         boolean result;
 
         if(FileGrid.copyFileProperty().isNotNull().get()){
-            var propertyOf = FileGrid.copyFileProperty().get().getFileProperty();
+            FileProperty propertyOf = FileGrid.copyFileProperty().get().getFileProperty();
             result = service.copy(SecurityUtil.getUserName(), propertyOf.getPath(), currentDir, propertyOf.getName());
         }
         else {
-            var propertyOf = FileGrid.moveFileProperty().get().getFileProperty();
+            FileProperty propertyOf = FileGrid.moveFileProperty().get().getFileProperty();
             result = service.move(SecurityUtil.getUserName(), propertyOf.getPath(), currentDir, propertyOf.getName());
         }
 

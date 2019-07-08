@@ -4,6 +4,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import ru.mediaserver.client.msdesktop.business.files.api.FileApi;
 import ru.mediaserver.client.msdesktop.business.files.model.FileProperty;
+import ru.mediaserver.client.msdesktop.business.files.util.FileUtil;
 import ru.mediaserver.client.msdesktop.business.util.RetrofitBuilderUtil;
 import ru.mediaserver.client.msdesktop.business.util.ServerUtil;
 
@@ -51,7 +52,7 @@ public class FileRepositoryImpl implements FileRepository {
 
     @Override
     public boolean upload(String user, String path, String name, InputStream file) throws IOException {
-        RequestBody requestFile = RequestBody.create(null, file.readAllBytes());
+        RequestBody requestFile = RequestBody.create(null, FileUtil.getAllBytes(file));
 
         MultipartBody.Part body = MultipartBody.Part
                 .createFormData("value", name, requestFile);

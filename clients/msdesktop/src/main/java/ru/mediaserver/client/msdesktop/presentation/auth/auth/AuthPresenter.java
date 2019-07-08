@@ -66,10 +66,10 @@ public class AuthPresenter implements Initializable {
     public void register() {
         Stage stage = new Stage();
 
-        var registerView = new RegisterView();
+        RegisterView registerView = new RegisterView();
         stage.setScene(new Scene(registerView.getView()));
 
-        var presenter = (RegisterPresenter) registerView.getPresenter();
+        RegisterPresenter presenter = (RegisterPresenter) registerView.getPresenter();
         presenter.stage = stage;
 
         stage.showAndWait();

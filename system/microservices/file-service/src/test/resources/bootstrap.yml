@@ -11,4 +11,4 @@ spring:
       active: dev
 
 file-service:
-  rootFilePath: /Users/vitalijbukatkin/IdeaProjects/file-service/testdirectory/
+  rootFilePath: /Users/vitalijbukatkin/Desktop/MediaServer/system/microservices/file-service/testdirectory

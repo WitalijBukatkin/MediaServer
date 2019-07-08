@@ -48,7 +48,7 @@ public class DownloadsPresenter implements Initializable {
     public void delete() {
         String selectedName = (String) downloadsList.getSelectionModel().getSelectedItem();
         if(selectedName != null) {
-            var alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure want delete " + selectedName + "?");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure want delete " + selectedName + "?");
             if (alert.showAndWait().get() == ButtonType.OK) {
                 try {
                     repository.delete(selectedName.substring(0, selectedName.indexOf(" / ")));

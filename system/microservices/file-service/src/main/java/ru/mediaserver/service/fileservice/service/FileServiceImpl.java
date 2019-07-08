@@ -29,10 +29,12 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public List<FileProperty> get(String user, String path) {
-        List<FileProperty> list = fileRepository.get(user, path);
+        String pathWithUser = FileUtil.getPathWithUser(user, path);
+
+        List<FileProperty> list = fileRepository.get(pathWithUser);
 
         if(list == null){
-            throw new FileNotFoundException(path);
+            throw new FileNotFoundException(pathWithUser);
         }
 
         if(path.length() != 0){
@@ -52,21 +54,23 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public void delete(String user, String path) {
-        if(!fileRepository.delete(user, path)){
+        path = FileUtil.getPathWithUser(user, path);
+
+        if(!fileRepository.delete(path)){
             throw new FileNotFoundException(path);
         }
     }
 
     @Override
     public String upload(String user, String fileName, String destination, InputStream inputStream) throws IOException {
-        String path = destination.equals("") ? fileName :
-                destination.concat("/").concat(fileName);
+        String path = FileUtil.getPathWithUser(user,
+                destination + "/" + fileName);
 
         if(inputStream == null){
             throw new IOException("InputStream is null");
         }
 
-        String uploaded = fileRepository.upload(user, path, inputStream);
+        String uploaded = fileRepository.upload(path, inputStream);
 
         if(uploaded == null){
             throw new IOException(path);
@@ -77,13 +81,15 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public FileProperty download(String user, String path, OutputStream outputStream) throws IOException {
+        path = FileUtil.getPathWithUser(user, path);
+
         String name = FileUtil.getNameOfPath(path);
 
         if(outputStream == null){
             throw new IOException("OutputStream is null");
         }
 
-        List<FileProperty> root = fileRepository.download(user, path, outputStream);
+        List<FileProperty> root = fileRepository.download(path, outputStream);
 
         if(root == null || root.isEmpty()){
             throw new FileNotFoundException(path);
@@ -91,7 +97,7 @@ public class FileServiceImpl implements FileService{
 
         if(root.size() > 1){
             try (ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
-                long size = compress(user, name, root, zipOutputStream);
+                long size = compress(name, root, zipOutputStream);
                 return new FileProperty(name.concat(".zip"), null, FileType.ARCHIVE, size);
             }
         }
@@ -102,32 +108,42 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public void copy(String user, String pathOf, String pathTo) {
-        if(!fileRepository.copy(user, pathOf, pathTo)){
-            throw new FileNotFoundException(pathOf.concat(" -> ").concat(pathTo));
+        pathOf = FileUtil.getPathWithUser(user, pathOf);
+        pathTo = FileUtil.getPathWithUser(user, pathTo);
+
+        if(!fileRepository.copy(pathOf, pathTo)){
+            throw new FileNotFoundException(pathOf
+                    .concat(" -> ")
+                    .concat(pathTo));
         }
     }
 
     @Override
     public void move(String user, String pathOf, String pathTo) {
-        if(!fileRepository.move(user, pathOf, pathTo)){
+        pathOf = FileUtil.getPathWithUser(user, pathOf);
+        pathTo = FileUtil.getPathWithUser(user, pathTo);
+
+        if(!fileRepository.move(pathOf, pathTo)){
             throw new FileNotFoundException(pathOf.concat(" -> ").concat(pathTo));
         }
     }
 
     @Override
     public void createDirectory(String user, String path) throws IOException {
-        if(!fileRepository.createDirectory(user, path)){
+        path = FileUtil.getPathWithUser(user, path);
+
+        if(!fileRepository.createDirectory(path)){
             throw new IOException(path);
         }
     }
 
-    private long compress(String user, String path, List<FileProperty> root, ZipOutputStream outputStream) throws IOException{
+    private long compress(String path, List<FileProperty> root, ZipOutputStream outputStream) throws IOException{
         long size = 0;
 
         for (FileProperty property : root) {
             if(property.getType() == FileType.DIRECTORY) {
-                List<FileProperty> files = fileRepository.download(user, property.getPath(), outputStream);
-                size += compress(user, path + "/" + property.getName(), files, outputStream);
+                List<FileProperty> files = fileRepository.download(property.getPath(), outputStream);
+                size += compress(path + "/" + property.getName(), files, outputStream);
                 continue;
             }
 
@@ -135,7 +151,7 @@ public class FileServiceImpl implements FileService{
 
             outputStream.putNextEntry(new ZipEntry(path + "/" + property.getName()));
 
-            fileRepository.download(user, property.getPath(), outputStream);
+            fileRepository.download(property.getPath(), outputStream);
         }
 
         return size;

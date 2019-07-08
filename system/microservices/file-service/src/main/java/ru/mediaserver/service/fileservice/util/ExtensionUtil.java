@@ -12,47 +12,29 @@ public class ExtensionUtil {
     private static Map<String, FileType> extensions = new HashMap<>();
 
     static {
-        extensions.putAll(Map.of(
-                "png", IMAGE,
-                "jpg", IMAGE,
-                "bmp", IMAGE,
-                "gif", IMAGE));
+        extensions.put("png", IMAGE);
+        extensions.put("jpg", IMAGE);
+        extensions.put("bmp", IMAGE);
+        extensions.put("gif", IMAGE);
 
-        extensions.putAll(Map.of(
-                "exe", EXEC,
-                "jar", EXEC
-        ));
 
-        extensions.putAll(Map.of(
-                "txt", TEXT
-        ));
+        extensions.put("exe", EXEC);
+        extensions.put("jar", EXEC);
 
-        extensions.putAll(Map.of(
-                "bat", SCRIPT,
-                "cmd", SCRIPT,
-                "sh", SCRIPT,
-                "js", SCRIPT
-        ));
 
-        extensions.putAll(Map.of(
-                "png", IMAGE,
-                "jpg", IMAGE,
-                "bmp", IMAGE,
-                "gif", IMAGE,
-                "txt", TEXT,
-                "bat", SCRIPT,
-                "cmd", SCRIPT,
-                "sh", SCRIPT,
-                "js", SCRIPT
-        ));
+        extensions.put("txt", TEXT);
 
-        extensions.putAll(Map.of(
-                "zip", ARCHIVE,
-                "bz2", ARCHIVE,
-                "tbz2", ARCHIVE,
-                "tar", ARCHIVE,
-                "rar", ARCHIVE,
-                "7z", ARCHIVE));
+        extensions.put("bat", SCRIPT);
+        extensions.put("cmd", SCRIPT);
+        extensions.put("sh", SCRIPT);
+        extensions.put("js", SCRIPT);
+
+        extensions.put("zip", ARCHIVE);
+        extensions.put("bz2", ARCHIVE);
+        extensions.put("tbz2", ARCHIVE);
+        extensions.put("tar", ARCHIVE);
+        extensions.put("rar", ARCHIVE);
+        extensions.put("7z", ARCHIVE);
     }
 
     public static FileType getTypeOfExtension(String extension){

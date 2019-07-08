@@ -19,12 +19,12 @@ public class Launcher extends Application {
     public void start(Stage stage) throws Exception {
 
         if(SecurityUtil.getAccessToken() == null){
-            var authView = new AuthView();
+            AuthView authView = new AuthView();
 
             Stage stageNotPrimary = new Stage();
             stageNotPrimary.setScene(new Scene(authView.getView()));
 
-            var presenter = (AuthPresenter) authView.getPresenter();
+            AuthPresenter presenter = (AuthPresenter) authView.getPresenter();
             presenter.stage = stageNotPrimary;
 
             stageNotPrimary.showAndWait();
@@ -33,7 +33,7 @@ public class Launcher extends Application {
         if(SecurityUtil.getAccessToken() != null){
             MenuView menuView = new MenuView();
 
-            var scene = new Scene(menuView.getView());
+            Scene scene = new Scene(menuView.getView());
             scene.getStylesheets()
                     .add(getClass().getResource("launcher.css").toExternalForm());
 

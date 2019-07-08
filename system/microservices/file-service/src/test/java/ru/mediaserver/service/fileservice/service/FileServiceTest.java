@@ -41,32 +41,31 @@ public class FileServiceTest {
 
     @Test
     public void getFromRoot() {
-        List<FileProperty> actual = service.get(userName, userName);
+        List<FileProperty> actual = service.get(userName, "");
+        List<FileProperty> expected = repository.get(ROOT.getPath());
 
-        List<FileProperty> expected = new ArrayList<>(Collections.singletonList(new FileProperty("...", "", DIRECTORY, 0)));
-        expected.addAll(repository.get(userName, userName));
         assertEquals(expected, actual);
     }
 
     @Test
     public void getFromFolder() {
-        List<FileProperty> actual = service.get(userName, FOLDER1.getPath());
-        List<FileProperty> expected = repository.get(userName, FOLDER1.getPath());
+        List<FileProperty> actual = service.get(userName, "/folder1");
+        List<FileProperty> expected = new ArrayList<>(Collections.singletonList(
+                new FileProperty("...", "", DIRECTORY, 0)));
 
-        FileProperty back = new FileProperty("...", userName, DIRECTORY, 0);
-        expected.add(0, back);
+        expected.addAll(repository.get(FOLDER1.getPath()));
 
         assertEquals(expected, actual);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void getNotFound() {
-        service.get(userName, "/");
+        service.get(userName, "/file3");
     }
 
     @Test
     public void deleteFile() {
-        service.delete(userName, FILE1.getPath());
+        service.delete(userName, "/file1");
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -77,11 +76,12 @@ public class FileServiceTest {
     @Test
     public void uploadFile() throws IOException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream("Hello, World!".getBytes());
-        String upload = service.upload(userName, "file3", userName, inputStream);
+        String upload = service.upload(userName, "file3", "", inputStream);
 
         String path = ROOT.getPath().concat("/file3");
         assertEquals(path, upload);
-        service.delete(userName, path);
+
+        service.delete(userName, "/file3");
     }
 
     @Test(expected = IOException.class)
@@ -94,36 +94,39 @@ public class FileServiceTest {
     public void downloadFile() throws IOException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             FileProperty expected = new FileProperty(FILE2.getName(), FILE2.getPath(), FileType.NONE, 0);
-            assertEquals(expected, service.download(userName, FILE2.getPath(), outputStream));
+            assertEquals(expected, service.download(userName, "/file2", outputStream));
             assertEquals("Hello, World!", outputStream.toString());
         }
     }
 
     @Test
     public void downloadDirectory() throws IOException {
-        String path = userName;
+        String path = "";
 
-        ByteArrayOutputStream expected = new ByteArrayOutputStream();
-        FileProperty expectedProperty = new FileProperty(ROOT.getPath().concat(".zip"), null, FileType.ARCHIVE, 52);
+        try(ByteArrayOutputStream expected = new ByteArrayOutputStream();
+            ByteArrayOutputStream actual = new ByteArrayOutputStream()) {
 
-        ByteArrayOutputStream actual = new ByteArrayOutputStream();
-        assertEquals(expectedProperty, service.download(userName, path, actual));
+            FileProperty expectedProperty = new FileProperty(userName.concat(".zip"),
+                    null, FileType.ARCHIVE, 52);
 
-        try(ZipOutputStream zipOutputStream = new ZipOutputStream(expected)) {
-            zipOutputStream.putNextEntry(new ZipEntry(FILE1.getPath()));
-            repository.download(userName, FILE1.getPath(), zipOutputStream);
+            assertEquals(expectedProperty, service.download(userName, path, actual));
 
-            zipOutputStream.putNextEntry(new ZipEntry(FILE2.getPath()));
-            repository.download(userName, FILE2.getPath(), zipOutputStream);
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(expected)) {
+                zipOutputStream.putNextEntry(new ZipEntry(userName + "/file2"));
+                repository.download(FILE2.getPath(), zipOutputStream);
 
-            zipOutputStream.putNextEntry(new ZipEntry(FILE3.getPath()));
-            repository.download(userName, FILE3.getPath(), zipOutputStream);
+                zipOutputStream.putNextEntry(new ZipEntry(userName + "/file1"));
+                repository.download(FILE1.getPath(), zipOutputStream);
 
-            zipOutputStream.putNextEntry(new ZipEntry(FILE4.getPath()));
-            repository.download(userName, FILE4.getPath(), zipOutputStream);
+                zipOutputStream.putNextEntry(new ZipEntry(userName + "/folder1/file3"));
+                repository.download(FILE3.getPath(), zipOutputStream);
+
+                zipOutputStream.putNextEntry(new ZipEntry(userName + "/folder1/file4"));
+                repository.download(FILE4.getPath(), zipOutputStream);
+            }
+
+            assertEquals(expected.size(), actual.size());
         }
-
-        assertEquals(expected.size(), actual.size());
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -135,33 +138,32 @@ public class FileServiceTest {
 
     @Test(expected = IOException.class)
     public void downloadFileWithDataNull() throws IOException {
-        service.download(userName, FILE1.getPath(), null);
+        service.download(userName, "/file1", null);
     }
 
     @Test
     public void copyFile(){
-        String path = FILE1.getPath();
+        String pathTo = "/folder1/file1";
 
-        var pathTo = FOLDER1.getPath().concat("/").concat(FILE1.getName());
-        service.copy(userName, path, pathTo);
+        service.copy(userName, "/file1", pathTo);
 
         service.delete(userName, pathTo);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void copyFileNotFound(){
-        String path = ROOT.getPath().concat("/file10");
-        String pathTo = ROOT.getPath().concat("/file10.txt");
+        String path = "/file10";
+        String pathTo = "/file10.txt";
 
         service.copy(userName, path, pathTo);
     }
 
     @Test
     public void moveFile(){
-        String path = ROOT.getPath().concat("/testfile");
-        service.copy(userName, FILE1.getPath(), path);
+        String path = "/testfile";
+        service.copy(userName, "/file1", path);
 
-        String pathTo = FOLDER1.getPath().concat("/testfile");
+        String pathTo = "/folder1/testfile";
         service.move(userName, path, pathTo);
 
         service.delete(userName, pathTo);
@@ -177,7 +179,7 @@ public class FileServiceTest {
 
     @Test
     public void createDirectory() throws IOException {
-        String path = ROOT.getPath().concat("/folder2");
+        String path = "/folder2";
         service.createDirectory(userName, path);
 
         service.delete(userName, path);
@@ -185,7 +187,7 @@ public class FileServiceTest {
 
     @Test(expected = IOException.class)
     public void createDuplicateDirectory() throws IOException {
-        String path = ROOT.getPath();
+        String path = "";
         service.createDirectory(userName, path);
     }
 }

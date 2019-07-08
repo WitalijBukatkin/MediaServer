@@ -9,33 +9,31 @@ import java.util.List;
 
 public interface FileRepository {
 
-    List<FileProperty> get(String user, String path);
+    List<FileProperty> get(String path);
 
-    boolean delete(String user, String path);
+    boolean delete(String path);
 
     /**
      * Upload file to server
-     * @param user userName
      * @param path on server
      * @param inputStream file data
      * @return path to uploaded fileName, maybe null
      * @throws IOException if not writing
      */
-    String upload(String user, String path, InputStream inputStream) throws IOException;
+    String upload(String path, InputStream inputStream) throws IOException;
 
     /**
      * Download file from server
-     * @param user userName
      * @param path on server
      * @param outputStream file data
      * @return fileName, maybe null if not downloaded
      * @throws IOException if not reading
      */
-    List<FileProperty> download(String user, String path, OutputStream outputStream) throws IOException;
+    List<FileProperty> download(String path, OutputStream outputStream) throws IOException;
 
-    boolean copy(String user, String pathOf, String pathTo);
+    boolean copy(String pathOf, String pathTo);
 
-    boolean move(String user, String pathOf, String pathTo);
+    boolean move(String pathOf, String pathTo);
 
-    boolean createDirectory(String user, String path);
+    boolean createDirectory(String path);
 }

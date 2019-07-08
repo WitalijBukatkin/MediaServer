@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static ru.mediaserver.service.fileservice.util.ExtensionUtil.getTypeOfExtension;
 
@@ -44,19 +45,23 @@ public class FileUtil {
                 path.substring(0, path.lastIndexOf("/")) : path;
     }
 
-    public static FileProperty createPropertyWithPreview(File file, FileServiceConfiguration fileServiceConfiguration, String user){
-        FileProperty property = createPropertyOfFile(file, fileServiceConfiguration, user);
+    public static String getPathWithUser(String user, String path){
+        return "/".concat(user).concat(path);
+    }
+
+    public static FileProperty createPropertyWithPreview(File file, FileServiceConfiguration fileServiceConfiguration){
+        FileProperty property = createPropertyOfFile(file, fileServiceConfiguration);
         createPreview(file, property);
         return property;
     }
 
-    public static FileProperty createPropertyOfFile(File file, FileServiceConfiguration fileServiceConfiguration, String user) {
+    public static FileProperty createPropertyOfFile(File file, FileServiceConfiguration fileServiceConfiguration) {
         FileProperty fileProperty = new FileProperty();
 
         fileProperty.setName(file.getName());
 
         fileProperty.setPath(file.getPath()
-                .replace(fileServiceConfiguration.getRootFilePath().concat(user), ""));
+                .replace(fileServiceConfiguration.getRootFilePath(), ""));
 
         fileProperty.setType(file.isDirectory() ?
                 FileType.DIRECTORY :
@@ -82,5 +87,18 @@ public class FileUtil {
         } catch (IOException e){
             e.printStackTrace();
         }
+    }
+
+    public static byte[] getAllBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        return buffer.toByteArray();
     }
 }

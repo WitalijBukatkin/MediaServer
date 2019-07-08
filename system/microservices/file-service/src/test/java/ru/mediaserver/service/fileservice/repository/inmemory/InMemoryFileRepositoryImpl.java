@@ -4,15 +4,12 @@ import org.springframework.stereotype.Component;
 import ru.mediaserver.service.fileservice.model.FileProperty;
 import ru.mediaserver.service.fileservice.model.FileType;
 import ru.mediaserver.service.fileservice.repository.FileRepository;
+import ru.mediaserver.service.fileservice.util.FileUtil;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -24,37 +21,37 @@ import static ru.mediaserver.service.fileservice.util.FileUtil.getPathWithOutNam
 @Component
 public class InMemoryFileRepositoryImpl implements FileRepository {
     private Map<String, List<FileProperty>> files = new ConcurrentHashMap<>();
-    private Map<String, InputStream> values = new ConcurrentHashMap<>();
+    private Map<String, byte[]> values = new ConcurrentHashMap<>();
 
     {
         files.put(ROOT.getPath(),
-                new CopyOnWriteArrayList<>(List.of(FILE2, FILE1, FOLDER1)));
+                new CopyOnWriteArrayList<>(Arrays.asList(FILE2, FILE1, FOLDER1)));
 
         files.put(FOLDER1.getPath(),
-                new CopyOnWriteArrayList<>(List.of(FILE3, FILE4)));
+                new CopyOnWriteArrayList<>(Arrays.asList(FILE3, FILE4)));
 
-        values.put(FILE2.getPath(), new ByteArrayInputStream(fileString.getBytes()));
-        values.put(FILE1.getPath(), new ByteArrayInputStream(fileString.getBytes()));
-        values.put(FILE3.getPath(), new ByteArrayInputStream(fileString.getBytes()));
-        values.put(FILE4.getPath(), new ByteArrayInputStream(fileString.getBytes()));
+        values.put(FILE2.getPath(), fileString.getBytes());
+        values.put(FILE1.getPath(), fileString.getBytes());
+        values.put(FILE3.getPath(), fileString.getBytes());
+        values.put(FILE4.getPath(), fileString.getBytes());
     }
 
     @Override
-    public List<FileProperty> get(String user, String path) {
-        var list = new CopyOnWriteArrayList<FileProperty>();
+    public List<FileProperty> get(String path) {
+        List list = new CopyOnWriteArrayList<FileProperty>();
 
         try {
             if (files.containsKey(path)) {
                 list.addAll(files.get(path));
-                return list.stream()
+                return (List<FileProperty>) list.stream()
                         .sorted(Comparator.comparing(FileProperty::getName))
                         .collect(Collectors.toList());
             }
 
-            for (var entry : files.entrySet()) {
+            for (Map.Entry<String, List<FileProperty>> entry : files.entrySet()) {
                 List<FileProperty> v = entry.getValue();
 
-                var fileProperty = v.stream()
+                Optional<FileProperty> fileProperty = v.stream()
                         .filter((f) -> f.getPath().equals(path))
                         .findFirst();
 
@@ -70,7 +67,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
     }
 
     @Override
-    public boolean delete(String user, String path) {
+    public boolean delete(String path) {
         files.forEach((key, value) -> value
                 .removeIf(f -> f.getPath().equals(path)));
 
@@ -88,7 +85,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
     }
 
     @Override
-    public String upload(String user, String path, InputStream inputStream) throws IOException {
+    public String upload(String path, InputStream inputStream) throws IOException {
         String pathWithOutName = getPathWithOutName(path);
         String name = getNameOfPath(path);
 
@@ -102,12 +99,12 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
 
         properties.add(property);
 
-        values.put(path, inputStream);
+        values.put(path, FileUtil.getAllBytes(inputStream));
         return path;
     }
 
     @Override
-    public List<FileProperty> download(String user, String path, OutputStream outputStream) throws IOException {
+    public List<FileProperty> download(String path, OutputStream outputStream) throws IOException {
         if(files.containsKey(path)){
             return files.get(path);
         }
@@ -125,16 +122,16 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
                     .findFirst();
 
             if(fileProperty.isPresent()){
-                var property = fileProperty.get();
+                FileProperty property = fileProperty.get();
 
-                var inputStream = values.get(path);
+                byte[] value = values.get(path);
 
-                if(inputStream != null){
-                    outputStream.write(inputStream.readAllBytes());
-                    inputStream.reset();
+                if(value != null){
+                    outputStream.write(value);
                 }
 
-                return List.of(new FileProperty(property.getName(), path, property.getType(), 0));
+                return Collections.singletonList(
+                        new FileProperty(property.getName(), path, property.getType(), 0));
             }
 
             return null;
@@ -142,29 +139,29 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
     }
 
     @Override
-    public boolean copy(String user, String pathOf, String pathTo) {
+    public boolean copy(String pathOf, String pathTo) {
         String pathToWithOutName = getPathWithOutName(pathTo);
 
         files.forEach((k, v) -> {
-            var property = v.stream()
+            Optional<FileProperty> property = v.stream()
                     .filter(f -> f.getPath().equals(pathOf))
                     .findFirst();
 
             property.ifPresent(fileProperty -> {
-               var propertyTo = new FileProperty(fileProperty.getName(),
+               FileProperty propertyTo = new FileProperty(fileProperty.getName(),
                        pathTo, fileProperty.getType(), fileProperty.getLength());
 
-               var list = files.get(pathToWithOutName);
+               List<FileProperty> list = files.get(pathToWithOutName);
                list.add(propertyTo);
             });
         });
 
         if(files.containsKey(pathOf)){
-            var list = files.get(pathOf);
-            var copyList = new CopyOnWriteArrayList<FileProperty>();
+            List<FileProperty> list = files.get(pathOf);
+            List<FileProperty> copyList = new CopyOnWriteArrayList<>();
 
             for (FileProperty property : list) {
-                var propertyTo = new FileProperty(property.getName(),
+                FileProperty propertyTo = new FileProperty(property.getName(),
                         property.getPath().replace(pathOf, pathTo),
                         property.getType(), property.getLength());
 
@@ -175,20 +172,19 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
             return true;
         }
         if (values.containsKey(pathOf)) {
-            var inputStream = values.get(pathOf);
-            values.put(pathTo, inputStream);
+            values.put(pathTo, values.get(pathOf));
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean move(String user, String pathOf, String pathTo) {
-        String pathToWithOutName = getPathWithOutName(pathTo);
-        String name = getNameOfPath(pathTo);
+    public boolean move(String pathOf, String pathTo) {
+        String pathToWithOutName = FileUtil.getPathWithOutName(pathTo);
+        String name = FileUtil.getNameOfPath(pathTo);
 
         files.forEach((k, v) -> {
-            var property = v.stream()
+            Optional<FileProperty> property = v.stream()
                     .filter(f -> f.getPath().equals(pathOf))
                     .findFirst();
 
@@ -197,7 +193,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
                 fileProperty.setPath(pathTo);
                 fileProperty.setName(name);
 
-                var list = files.get(pathToWithOutName);
+                List<FileProperty> list = files.get(pathToWithOutName);
                 list.add(fileProperty);
             });
         });
@@ -209,7 +205,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
                 String propertyPath = property.getPath().replace(pathOf, pathTo);
                 property.setPath(propertyPath);
 
-                String propertyName = getNameOfPath(propertyPath);
+                String propertyName = FileUtil.getNameOfPath(propertyPath);
                 property.setName(propertyName);
             }
 
@@ -218,16 +214,16 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
             return true;
         }
         if (values.containsKey(pathOf)) {
-            InputStream inputStream = values.get(pathOf);
+            byte[] bytes = values.get(pathOf);
             values.remove(pathOf);
-            values.put(pathTo, inputStream);
+            values.put(pathTo, bytes);
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean createDirectory(String user, String path) {
+    public boolean createDirectory(String path) {
         if(files.containsKey(path)) {
             return false;
         }
@@ -236,7 +232,7 @@ public class InMemoryFileRepositoryImpl implements FileRepository {
         String name = getNameOfPath(path);
 
         if(files.containsKey(pathWithOutName)){
-            var properties = files.get(pathWithOutName);
+            List<FileProperty> properties = files.get(pathWithOutName);
             properties.add(new FileProperty(name, path, FileType.DIRECTORY, 0));
 
             files.put(path, new CopyOnWriteArrayList<>());

@@ -25,7 +25,7 @@ public class DownloadTask extends Service<Void> {
 
     @Override
     protected Task<Void> createTask() {
-        return new Task<>() {
+        return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 try(BufferedInputStream inputStream = new BufferedInputStream(repository.download(user, path));
