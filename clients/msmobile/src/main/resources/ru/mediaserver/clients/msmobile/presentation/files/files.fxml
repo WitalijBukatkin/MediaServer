@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.control.ScrollPane?>
+<?import ru.mediaserver.clients.msmobile.presentation.control.FileGrid?>
+<View xmlns:fx="http://javafx.com/fxml/1" fx:id="files" xmlns="http://javafx.com/javafx/8"
+      fx:controller="ru.mediaserver.clients.msmobile.presentation.files.FilesPresenter">
+   <ScrollPane>
+      <FileGrid fx:id="fileGrid"/>
+   </ScrollPane>
+</View>
