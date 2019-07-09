@@ -20,7 +20,12 @@ SBC (eg RockPro64) with OMV, 2G RAM min.
 7. Postgres
 8. Adminer
 
-## Photos
+### Documents
+
+- [Documents](https://github.com/WitalijBukatkin/MediaServer/wiki/Documents)
+- [Presentations](https://github.com/WitalijBukatkin/MediaServer/wiki/Presentations)
+
+### Photos
 
 Desktop version:
 ![IMAGE 2019-07-09 17:36:48](https://user-images.githubusercontent.com/32595013/60897101-2a3a2000-a270-11e9-8468-8f7ba8c62bf6.jpg)
