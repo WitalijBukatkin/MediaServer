@@ -1,6 +1,6 @@
-### Configuration linux system
+## Configuration linux system
 
-#### Preliminary
+### Preliminary
 ```console
 
 apt-get update
