@@ -1,6 +1,6 @@
-###Configuration linux system
+### Configuration linux system
 
-####Preliminary
+#### Preliminary
 ```console
 
 apt-get update
@@ -14,21 +14,21 @@ dpkg-reconfigure tzdata #Time conf
 echo "rock64 ALL=NOPASSWD: ALL" >> /etc/sudoers  #Disable password root
 ```
 
-###Enable root in SSH
+### Enable root in SSH
 ```console
 sudo passwd
 sudo echo PermitRootLogin yes >> /etc/ssh/sshd_config
 sudo service ssh reload
 ```
 
-###Create ssh key
+### Create ssh key
 ```console
 ssh-keygen
 ssh-copy-id root@192.168.1.34
 ssh-add
 ```
 
-###Update kernel for fan
+### Update kernel for fan
 All: https://github.com/ayufan-rock64/linux-kernel/releases/tag/4.4.132-1077-rockchip-ayufan
 
 ```console
@@ -43,7 +43,7 @@ apt remove -y *4.4.132-1075*
 apt autoremove -y
 ```
 
-###Install Wifi drivers rtl8812au
+### Install Wifi drivers rtl8812au
 ```console
 git clone https://github.com/gordboy/rtl8812au
 ln -s /lib/modules/`uname -r`/build/arch/arm64 /lib/modules/`uname -r`/build/arch/aarch64
