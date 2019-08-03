@@ -13,6 +13,7 @@ public class RetrofitBuilderUtil {
         return new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     Request request = chain.request();
+
                     if (SecurityUtil.getAccessToken() == null) {
                         request = request.newBuilder()
                                 .header("Authorization",
@@ -23,6 +24,7 @@ public class RetrofitBuilderUtil {
                                 .header("Authorization", "Bearer " + SecurityUtil.getAccessToken())
                                 .build();
                     }
+
                     return chain.proceed(request);
                 })
                 .connectTimeout(5, TimeUnit.MINUTES)

@@ -1,6 +1,6 @@
 # MediaServer
 The diploma project for college. Hardware and software complex "Media Server".
-Uses Micro Service Architecture.
+Make of Micro Service Architecture.
 
 Services wrote on Java with Spring. Deployed on Docker containers in Server machine.
 
@@ -19,6 +19,11 @@ SBC (eg RockPro64) with OMV, 2G RAM min.
 6. Apache Commons-IO
 7. Postgres
 8. Adminer
+9. Retrofit2
+10. Retrofit converter-jackson
+11. JUnit
+12. Afterburner FX
+13. ControlsFX
 
 ### Documents
 
