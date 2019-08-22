@@ -1,0 +1,19 @@
+task deploy(dependsOn: processResources) {
+    doFirst{
+        ssh.run {
+            session(remotes.server) {
+                put from: file('build/resources/main/' + project.name), into: '/usr/local/sbin/'
+                put from: file('build/resources/main/' + project.name + '.service'), into: '/etc/systemd/system/'
+                put from: file('build/resources/main/' + project.name + '.rules'), into: '/etc/udev/rules.d/'
+
+                execute 'chmod a+x /usr/local/sbin/' + project.name
+                execute 'systemctl daemon-reload'
+                execute 'systemctl restart ' + project.name
+                execute 'systemctl enable ' + project.name
+            }
+        }
+    }
+}
+
+group 'mediaserver.system.hardware.service'
+version '1.0-SNAPSHOT'

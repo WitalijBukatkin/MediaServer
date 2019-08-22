@@ -1,0 +1,92 @@
+#!/bin/sh
+
+#
+# Media Server
+# WitalijBukatkin
+# 2018-2019
+#
+
+log=/var/log/mediaserver/services/usb-control.log
+output=$log
+
+add(){
+    if [ -n $1 ]; then
+        mkdir /media/$1 >> $output
+
+        fsck /dev/$1 >> $output
+
+        if mount -o rw /dev/$1 /media/$1 >> $output; then
+            echo "`date` $1 mounted in /media/$1" >> $log
+        else
+            rm -r /media/$1 >> $output
+            return 0
+        fi
+
+        label=`blkid -s LABEL -o value /dev/$1`
+
+        if [ -z $label ]; then
+            label=$1
+        fi
+
+        echo "[$label]
+            path = /media/$1
+            browsable = yes
+            writable = yes\n" >> /etc/samba/smb.d/rd.conf
+
+        chmod a+wr -R /media/$1 >> $output
+
+        smbcontrol all reload-config >> $output
+    fi
+}
+
+remove(){
+    if [ -n $1 ]; then
+        label=`blkid -s LABEL -o value /dev/$1`
+
+        if [ -z $label ]; then
+            label=$1
+        fi
+
+        sed '/^[Disk 1]$/,/^$/d' /etc/samba/smb.d/rd.conf > /etc/samba/smb.d/rd.conf
+        smbcontrol all reload-config >> $output
+
+        if umount -l /media/$1 >> $output; then
+            echo "`date` $1 unmounted of /media/$1" >> $log
+        else
+            return
+        fi
+
+        rmdir /media/$1 >> $output
+    fi
+}
+
+clean(){
+    if [ -s /etc/samba/smb.d/rd.conf ]; then
+        echo "" > /etc/samba/smb.d/rd.conf >> $log
+        smbcontrol all reload-config >> $output
+        umount -l /media/* >> $output
+        rmdir /media/* >> $output
+        echo "`date` Cleared list shared devices" >> $log
+    fi
+}
+
+info(){
+    echo "Usage:\tusb-control option
+    Options:
+        add device_without_path - add new shared device
+        remove device_without_path - remove exists shared device
+        clean - remove all exist shared devices
+    This util developed for MediaServer project in 2019 year by WitalijBukatkin"
+	exit
+}
+
+case "$1" in
+	add)
+			add $2;;
+	remove)
+			remove $2;;
+	clean)
+			clean;;
+	*)
+			info;;
+esac
