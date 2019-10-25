@@ -1,4 +1,7 @@
 # MediaServer
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ea71130652a54908b6facb073b73e362)](https://www.codacy.com/manual/WitalijBukatkin/MediaServer?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=WitalijBukatkin/MediaServer&amp;utm_campaign=Badge_Grade)
+
 The diploma project for college. Hardware and software complex "Media Server".
 Make of Micro Service Architecture.
 
